@@ -3,7 +3,7 @@ package entities;
 import javax.annotation.Generated;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2015-12-17T19:31:39")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2015-12-17T19:44:16")
 @StaticMetamodel(Administrator.class)
 public class Administrator_ extends User_ {
 

@@ -36,13 +36,9 @@ public class Attendant extends User implements Serializable {
     @ManyToMany(mappedBy = "attendants")
     private List<Event> eventParticipant;
 
-    @OneToMany
-    private List<AttendantEvent> attendantsPresences;
-
     public Attendant() {
         this.events = new LinkedList<>();
         this.categories = new LinkedList<>();
-        this.attendantsPresences = new LinkedList<>();
         this.eventParticipant = new LinkedList<>();
     }
 
@@ -51,7 +47,6 @@ public class Attendant extends User implements Serializable {
 
         this.events = new LinkedList<>();
         this.categories = new LinkedList<>();
-        this.attendantsPresences = new LinkedList<>();
         this.eventParticipant = new LinkedList<>();
 
     }
@@ -118,14 +113,6 @@ public class Attendant extends User implements Serializable {
 
     public int getNumberOfCategories() {
         return this.categories.size();
-    }
-
-    public List<AttendantEvent> getAttendantsInEvent() {
-        return attendantsPresences;
-    }
-
-    public void setAttendantsInEvent(List<AttendantEvent> attendantsInEvent) {
-        this.attendantsPresences = attendantsInEvent;
     }
 
     public List<Event> getEventParticipant() {

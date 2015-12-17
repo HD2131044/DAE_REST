@@ -77,9 +77,6 @@ public class Event implements Serializable {
             = @JoinColumn(name = "ATTENDANTS_ID", referencedColumnName = "ID"))
     private List<Attendant> attendants;
 
-    @OneToMany
-    private List<AttendantEvent> attendantsPresences;
-
     private boolean openForEnroll;
     private boolean openForPresence;
 
@@ -96,7 +93,6 @@ public class Event implements Serializable {
         this.categories = new LinkedList<>();
         this.managers = new LinkedList<>();
         this.attendants = new LinkedList<>();
-        this.attendantsPresences = new LinkedList<>();
         this.presentes = new LinkedList<>();
     }
 
@@ -108,7 +104,6 @@ public class Event implements Serializable {
         this.categories = new LinkedList<>();
         this.managers = new LinkedList<>();
         this.attendants = new LinkedList<>();
-        this.attendantsPresences = new LinkedList<>();
         this.presentes = new LinkedList<>();
     }
 
@@ -241,18 +236,7 @@ public class Event implements Serializable {
             throw new EJBException(ex.getMessage());
         }
     }
-
-//    public void addAttendantPresence(Attendant attendant, boolean presence) {
-//        AttendantEvent attEv = new AttendantEvent();
-//        attEv.setAttendant(attendant);
-//        attEv.setEvent(this);
-//        attEv.setAttendantId(attendant.getId());
-//        attEv.setEventId(this.getId());
-//        attEv.setIsAttending(true);
-//
-//        attendantsPresences.add(attEv);
-//        attendant.getAttendantsInEvent().add(attEv);
-//    }
+    
     public void removeAttendant(Attendant attendant) {
         try {
             if (attendants.contains(attendant)) {
@@ -300,13 +284,6 @@ public class Event implements Serializable {
         this.password = password;
     }
 
-    public List<AttendantEvent> getAttendantsPresences() {
-        return attendantsPresences;
-    }
-
-    public void setAttendantsPresences(List<AttendantEvent> attendantsPresences) {
-        this.attendantsPresences = attendantsPresences;
-    }
 
     public void addPresenca(Attendant attendant) {
         if (!presentes.contains(attendant)) {
