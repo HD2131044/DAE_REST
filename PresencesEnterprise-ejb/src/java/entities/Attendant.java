@@ -33,13 +33,17 @@ public class Attendant extends User implements Serializable {
     @ManyToMany(mappedBy = "attendants")
     private List<Event> events;
 
+    @ManyToMany(mappedBy = "attendants")
+    private List<Event> eventParticipant;
+
     @OneToMany
     private List<AttendantEvent> attendantsPresences;
 
     public Attendant() {
         this.events = new LinkedList<>();
         this.categories = new LinkedList<>();
-        this.attendantsPresences= new LinkedList<>();
+        this.attendantsPresences = new LinkedList<>();
+        this.eventParticipant = new LinkedList<>();
     }
 
     public Attendant(String username, String password, String name, String email) {
@@ -48,6 +52,7 @@ public class Attendant extends User implements Serializable {
         this.events = new LinkedList<>();
         this.categories = new LinkedList<>();
         this.attendantsPresences = new LinkedList<>();
+        this.eventParticipant = new LinkedList<>();
 
     }
 
@@ -122,9 +127,15 @@ public class Attendant extends User implements Serializable {
     public void setAttendantsInEvent(List<AttendantEvent> attendantsInEvent) {
         this.attendantsPresences = attendantsInEvent;
     }
-    
-    
 
+    public List<Event> getEventParticipant() {
+        return eventParticipant;
+    }
+
+    public void setEventParticipant(List<Event> eventParticipant) {
+        this.eventParticipant = eventParticipant;
+    }
+    
     @Override
     public String toString() {
         return "entities.Attendant[id=" + id + "]: " + name;

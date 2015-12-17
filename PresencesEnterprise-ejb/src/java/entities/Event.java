@@ -84,6 +84,12 @@ public class Event implements Serializable {
     private boolean openForPresence;
 
     //Solucao provisória de inscrição de attendants no evento
+    @ManyToMany
+    @JoinTable(name = "EVENTS_PARTICIPANTS",
+            joinColumns
+            = @JoinColumn(name = "EVENT_ID", referencedColumnName = "ID"),
+            inverseJoinColumns
+            = @JoinColumn(name = "ATTENDANTS_ID", referencedColumnName = "ID"))
     private List<Attendant> presentes;
 
     public Event() {
