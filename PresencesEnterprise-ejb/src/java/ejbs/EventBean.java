@@ -15,6 +15,7 @@ import exceptions.EventNotEnrolledException;
 import exceptions.MyConstraintViolationException;
 import exceptions.Utils;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
@@ -63,7 +64,7 @@ public class EventBean {
         }
     }
 
-    private Event getEventByName(String name) {
+    public Event getEventByName(String name) {
         try {
             Event event = new Event();
             List<Event> events = (List<Event>) em.createNamedQuery("getAllEvents").getResultList();
@@ -167,7 +168,7 @@ public class EventBean {
 //            throw new EJBException(e.getMessage());
 //        }
 //    }
-     @RolesAllowed({"Attendant"})
+    @RolesAllowed({"Attendant"})
     public List<EventDTO> getAttendantEvents(Long attendantId) throws EntityDoesNotExistsException {
         try {
             Attendant attendant = em.find(Attendant.class, attendantId);
@@ -181,6 +182,7 @@ public class EventBean {
             throw new EJBException(e.getMessage());
         }
     }
+
     /*
      @RolesAllowed({"Attendant"})
      public void setPasswordOnEventOfAttendant(Long attendantId,Long eventId) throws EntityDoesNotExistsException {
@@ -199,7 +201,6 @@ public class EventBean {
             throw new EJBException(e.getMessage());
         }
     }*/
-
     public List<AttendantDTO> getEventAttendants(String name) {
         Event event = getEventByName(name);
         if (event != null) {
@@ -382,11 +383,31 @@ public class EventBean {
         event.setPassword(pass);
     }
 
+    public void adicionarAttendant(Event event, Long attendantId) throws EntityDoesNotExistsException {
 
-    public void adicionarAttendant(Long eventId, Long attendantId) throws EntityDoesNotExistsException {
+        Attendant attendant = em.find(Attendant.class, attendantId);
+        if (attendant == null) {
+
+            throw new EntityDoesNotExistsException("There is no event with that id.");
+        }
+
+        event.addPresenca(attendant);
+    }
+
+    public boolean checkPassword(String pass, Long id, Long attendantId) throws EntityDoesNotExistsException {
+        Event event = em.find(Event.class, id);
+        if (event == null) {
+            throw new EntityDoesNotExistsException("There is no event with that id.");
+        }
+        if (pass.equals(event.getPassword())) {
+            adicionarAttendant(event, attendantId);
+        }
+        return pass.equals(event.getPassword());
+    }
+
+    public boolean isAttendantAParticipant(Long eventId, Long attendantId) throws EntityDoesNotExistsException {
         Event event = em.find(Event.class, eventId);
         if (event == null) {
-
             throw new EntityDoesNotExistsException("There is no event with that id.");
         }
         Attendant attendant = em.find(Attendant.class, attendantId);
@@ -394,11 +415,12 @@ public class EventBean {
 
             throw new EntityDoesNotExistsException("There is no event with that id.");
         }
- 
-        event.addPresenca(attendant);
+        
+        return event.isAttendantPresent(attendant);
     }
 
-    EventDTO eventToDTO(Event event) {
+    EventDTO eventToDTO(Event event
+    ) {
         EventDTO eventDTO = new EventDTO(
                 event.getId(),
                 event.getName(),
@@ -411,7 +433,8 @@ public class EventBean {
         return eventDTO;
     }
 
-    List<EventDTO> eventsToDTOs(List<Event> events) {
+    List<EventDTO> eventsToDTOs(List<Event> events
+    ) {
         List<EventDTO> dtos = new ArrayList<>();
         for (Event e : events) {
             dtos.add(eventToDTO(e));
@@ -419,13 +442,15 @@ public class EventBean {
         return dtos;
     }
 
-    CategoryDTO categoryToDTO(EventCategory category) {
+    CategoryDTO categoryToDTO(EventCategory category
+    ) {
         return new CategoryDTO(
                 category.getId(),
                 category.getName());
     }
 
-    List<CategoryDTO> categoriesToDTOs(List<EventCategory> categories) {
+    List<CategoryDTO> categoriesToDTOs(List<EventCategory> categories
+    ) {
         List<CategoryDTO> dtos = new ArrayList<>();
         for (EventCategory c : categories) {
             dtos.add(categoryToDTO(c));
@@ -433,7 +458,8 @@ public class EventBean {
         return dtos;
     }
 
-    AttendantDTO attendantToDTO(Attendant attendant) {
+    AttendantDTO attendantToDTO(Attendant attendant
+    ) {
         return new AttendantDTO(
                 attendant.getId(),
                 attendant.getUserName(),
@@ -442,7 +468,8 @@ public class EventBean {
                 attendant.getEmail());
     }
 
-    List<AttendantDTO> attendantsToDTOs(List<Attendant> attendants) {
+    List<AttendantDTO> attendantsToDTOs(List<Attendant> attendants
+    ) {
         List<AttendantDTO> dtos = new ArrayList<>();
         for (Attendant a : attendants) {
             dtos.add(attendantToDTO(a));
@@ -450,7 +477,8 @@ public class EventBean {
         return dtos;
     }
 
-    ManagerDTO managerToDTO(Manager manager) {
+    ManagerDTO managerToDTO(Manager manager
+    ) {
         return new ManagerDTO(
                 manager.getId(),
                 manager.getUserName(),
@@ -459,7 +487,8 @@ public class EventBean {
                 manager.getEmail());
     }
 
-    List<ManagerDTO> managersToDTOs(List<Manager> managers) {
+    List<ManagerDTO> managersToDTOs(List<Manager> managers
+    ) {
         List<ManagerDTO> dtos = new ArrayList<>();
         for (Manager m : managers) {
             dtos.add(managerToDTO(m));

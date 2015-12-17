@@ -301,9 +301,12 @@ public class Event implements Serializable {
     public void setAttendantsPresences(List<AttendantEvent> attendantsPresences) {
         this.attendantsPresences = attendantsPresences;
     }
-    
+
     public void addPresenca(Attendant attendant) {
-        presentes.add(attendant);
+        if (!presentes.contains(attendant)) {
+            System.out.println("#######inscreveu o attendant no evento: " + attendant.toString());
+            presentes.add(attendant);
+        }
     }
 
     public List<Attendant> getPresentes() {
@@ -313,6 +316,14 @@ public class Event implements Serializable {
     public void setPresentes(LinkedList<Attendant> presentes) {
         this.presentes = presentes;
     }
-    
-    
+
+    public boolean isAttendantPresent(Attendant attendant) {
+        for(Attendant att: presentes) {
+            if(att.getId() == attendant.getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

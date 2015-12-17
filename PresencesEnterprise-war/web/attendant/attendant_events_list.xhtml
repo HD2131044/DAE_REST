@@ -7,10 +7,10 @@
         <title>Attendant Events</title>
     </h:head>
     <h:body>
-        
+
         <h3 style="color: green">My Details</h3>
         <hr></hr>
-        
+
         <h:panelGrid columns="2">
 
             <h:outputLabel for="name" value="Name: " />
@@ -30,14 +30,14 @@
 
         </h:panelGrid>
         <br/> 
-        
+
         <hr></hr>
 
-        
+
         <h3 style="color: green">My Events</h3>
 
         <hr></hr>
-        
+
         <h:dataTable
             var="event" 
             summary="Table of attendant events"
@@ -62,7 +62,7 @@
                 </h:form>
             </h:column>
 
-             <h:column>
+            <h:column>
                 <f:facet name="header">
                     <h:outputText value="Description" />
                 </f:facet>
@@ -70,7 +70,7 @@
                     <h:outputText value="#{event.description}" />    
                 </h:form>
             </h:column>
-            
+
             <h:column>
                 <f:facet name="header">
                     <h:outputText value="Start Date" />
@@ -79,7 +79,7 @@
                     <h:outputText value="#{event.startDate}" />
                 </h:form>
             </h:column>
-            
+
             <h:column>
                 <f:facet name="header">
                     <h:outputText value="Finish Date" />
@@ -93,22 +93,33 @@
                 <f:facet name="header">
                     <h:outputText value="Presence" />
                 </f:facet>
-                <h:form>  
+                
+                <h:form rendered = "#{!eventManager.isAttendantAParticipant(event.id, userManager.currentUser.id)}">  
                     <h:outputText value="Event Closed" rendered="#{!event.openForPresence}" /> 
-                    
-                    <h:selectBooleanCheckbox value="#{userManager.attendantPresente()}" rendered="#{event.openForPresence}"> 
-                    </h:selectBooleanCheckbox> 
+                    <!--<h:selectBooleanCheckbox value="{userManager.attendantPresente(event.id, userManager.currentUser.id)}" rendered="{event.openForPresence}"> 
+                    </h:selectBooleanCheckbox>-->
+                    <h:form>
+                        <h:inputText binding ="#{textoPass}" />
+
+                        <h:commandButton value="Check" action="#{eventManager.checkAttendantPassword(textoPass.value, event.id, userManager.currentUser.id )}"/>
+                        <h:outputText value = "Your presence has been authorized. Thank you." rendered="#{eventManager.isAttendantAParticipant(event.id, userManager.currentUser.id)}"/>
+                        <h:outputText value = "Insert a valid code to authenticate your presence." rendered="#{!eventManager.isAttendantAParticipant(event.id, userManager.currentUser.id)}"/>
+
                 </h:form>
+
+                </h:form>
+                                    <h:outputText value = "Your presence has been authorized. Thank you." rendered="#{eventManager.isAttendantAParticipant(event.id, userManager.currentUser.id)}"/>
+
             </h:column>
 
         </h:dataTable>
         <hr></hr>
-        
+
         <h:form>
-           <h:commandLink value="Logout" actionListener="#{userManager.logout}" action="/faces/index_login?faces-redirect=true">
-                       
-                   </h:commandLink>
-       </h:form>
+            <h:commandLink value="Logout" actionListener="#{userManager.logout}" action="/faces/index_login?faces-redirect=true">
+
+            </h:commandLink>
+        </h:form>
 
         <hr></hr>
 

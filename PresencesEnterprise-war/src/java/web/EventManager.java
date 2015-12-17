@@ -27,6 +27,7 @@ import exceptions.MyConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIParameter;
@@ -54,6 +55,7 @@ public class EventManager {
     private List<AttendantDTO> attendantsDisponiveisSelected = new ArrayList<>();
     private List<ManagerDTO> managersDisponiveisSelected = new ArrayList<>();
     private List<String> managersSelected;
+    private boolean currentAttendantCheckPassword = false;
 
     public EventManager() {
         newEvent = new EventDTO();
@@ -280,6 +282,17 @@ public class EventManager {
        eventBean.updatePassword(currentEvent.getId(), currentEvent.getPassword());
    }
    
+   public void checkAttendantPassword(String pass, Long eventId, Long attendantId) throws EntityDoesNotExistsException {
+     
+       if(pass != null) {
+           currentAttendantCheckPassword = false;
+           currentAttendantCheckPassword = eventBean.checkPassword(pass, eventId, attendantId);
+       }
+   }
+   
+   public boolean isAttendantAParticipant(Long eventId, Long attendantId) throws EntityDoesNotExistsException {
+       return eventBean.isAttendantAParticipant(eventId, attendantId);
+   }
    //////////G&S/////////////////
 
     public List<ManagerDTO> getManagersDisponiveisSelected() {
@@ -328,6 +341,14 @@ public class EventManager {
 
     public void setManagersSelected(List<String> managersSelected) {
         this.managersSelected = managersSelected;
+    }
+
+    public boolean isCurrentAttendantCheckPassword() {
+        return currentAttendantCheckPassword;
+    }
+
+    public void setCurrentAttendantCheckPassword(boolean currentAttendantCheckPassword) {
+        this.currentAttendantCheckPassword = currentAttendantCheckPassword;
     }
 
     

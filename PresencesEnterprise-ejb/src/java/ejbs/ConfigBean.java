@@ -1,6 +1,7 @@
 
 package ejbs;
 
+import entities.Event;
 import entities.UserGroup;
 import entities.UserGroup.GROUP;
 import javax.annotation.PostConstruct;
@@ -117,6 +118,11 @@ public class ConfigBean {
             attendantBean.enrollAttendantInCategory(Long.parseLong("11"), Long.parseLong("40"));
             attendantBean.enrollAttendantInCategory(Long.parseLong("11"), Long.parseLong("39"));
             
+            
+            Event event = eventBean.getEventByName("Evento_5");
+            event.setOpenForEnroll(true);
+            event.setOpenForPresence(true);
+            event.setPassword("dd");
             
         } catch (Exception e) {
             System.out.println(e.getMessage());
