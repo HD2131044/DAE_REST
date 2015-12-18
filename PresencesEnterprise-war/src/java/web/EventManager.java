@@ -107,8 +107,8 @@ public class EventManager {
         }
         return "/faces/administrator/event_update?faces-redirect=true";
     }
-    
-        public List<EventDTO> getAllEvents() {
+
+    public List<EventDTO> getAllEvents() {
         try {
             return eventBean.getAllEvents();
         } catch (Exception e) {
@@ -129,14 +129,15 @@ public class EventManager {
     public int getNumberEvents(Long id) throws EntityDoesNotExistsException {
         return categoryBean.getNumberofEvents(id);
     }
-    
+
     public void changeStatus() throws EntityDoesNotExistsException, MyConstraintViolationException {
-       eventBean.changeEventStatus(currentEvent);
+        eventBean.changeEventStatus(currentEvent);
     }
+
     public void changePresenceStatus(Long id) throws EntityDoesNotExistsException, MyConstraintViolationException {
-       eventBean.changePresenceStatus(id);
+        eventBean.changePresenceStatus(id);
     }
-    
+
     public int getNumberOfAttendants(Long id) throws EntityDoesNotExistsException {
         return eventBean.getEventNumberOfAttendants(id);
     }
@@ -186,7 +187,7 @@ public class EventManager {
         eventBean.clearAllAttendantsInEvent(currentEvent.getName());
 
         for (String str : attendantsSelected) {
-     
+
             attendantBean.enrollAttendantInEvent((attendantBean.getAttendantByName(str)).getId(), currentEvent.getId());
         }
         actualizarAttendantsSelected();
@@ -207,6 +208,16 @@ public class EventManager {
             }
 
         }
+    }
+
+    public String addCategoryAttendants(Long categoryId, Long eventId) throws EntityDoesNotExistsException {
+        eventBean.addCategoryAttendants(categoryId, eventId);
+         return "/faces/administrator/admin_event_add_attendants?faces-redirect=true";
+    }
+
+    public String removeCategoryAttendants(Long categoryId, Long eventId) throws EntityDoesNotExistsException {
+        eventBean.removeCategoryAttendants(categoryId, eventId);
+        return "/faces/administrator/admin_event_add_attendants?faces-redirect=true";
     }
     ////CATEGORIES////////////////////////////////////////
 
@@ -243,57 +254,54 @@ public class EventManager {
         return "/faces/administrator/event_lists?faces-redirect=true";
     }
 
-    
 /////EVENTS//////////////////////////////////////
-   
-   
-   public void actualizarManagersSelected() {
+    public void actualizarManagersSelected() {
 
-       managersDisponiveisSelected.clear();
-       //managersSelected.clear();
-       if (eventBean.getEventManagers(currentEvent.getId()).isEmpty()) {
-           for (ManagerDTO man : managerBean.getAllManagers()) {
-               managersDisponiveisSelected.add(man);
-         
-           }
-       } else {
-           for (ManagerDTO man : managerBean.getAllManagers()) {
-               managersDisponiveisSelected.add(man);
-           }
-       }
-   }
+        managersDisponiveisSelected.clear();
+        //managersSelected.clear();
+        if (eventBean.getEventManagers(currentEvent.getId()).isEmpty()) {
+            for (ManagerDTO man : managerBean.getAllManagers()) {
+                managersDisponiveisSelected.add(man);
 
-   public String addManagersList() throws EntityDoesNotExistsException, AttendantNotEnrolledException, AttendantEnrolledException, ManagerNotEnrolledException, ManagerEnrolledException {
-       for (ManagerDTO man : eventBean.getEventManagers(currentEvent.getId())) {
-          
-           managerBean.unrollManagerInEvent(man.getId(), currentEvent.getId());
-       }
-       eventBean.clearAllManagersInEvent(currentEvent.getName());
+            }
+        } else {
+            for (ManagerDTO man : managerBean.getAllManagers()) {
+                managersDisponiveisSelected.add(man);
+            }
+        }
+    }
 
-       for (String str : managersSelected) {
+    public String addManagersList() throws EntityDoesNotExistsException, AttendantNotEnrolledException, AttendantEnrolledException, ManagerNotEnrolledException, ManagerEnrolledException {
+        for (ManagerDTO man : eventBean.getEventManagers(currentEvent.getId())) {
 
-           managerBean.enrollManagerInEvent((managerBean.getManager(str)).getId(), currentEvent.getId());
-       }
-       actualizarManagersSelected();
-       return "event_lists?faces-redirect=true";
-   }
-   
-   public void updatePassword() throws EntityDoesNotExistsException {
-       eventBean.updatePassword(currentEvent.getId(), currentEvent.getPassword());
-   }
-   
-   public void checkAttendantPassword(String pass, Long eventId, Long attendantId) throws EntityDoesNotExistsException {
-     
-       if(pass != null) {
-           currentAttendantCheckPassword = false;
-           currentAttendantCheckPassword = eventBean.checkPassword(pass, eventId, attendantId);
-       }
-   }
-   
-   public boolean isAttendantAParticipant(Long eventId, Long attendantId) throws EntityDoesNotExistsException {
-       return eventBean.isAttendantAParticipant(eventId, attendantId);
-   }
-   //////////G&S/////////////////
+            managerBean.unrollManagerInEvent(man.getId(), currentEvent.getId());
+        }
+        eventBean.clearAllManagersInEvent(currentEvent.getName());
+
+        for (String str : managersSelected) {
+
+            managerBean.enrollManagerInEvent((managerBean.getManager(str)).getId(), currentEvent.getId());
+        }
+        actualizarManagersSelected();
+        return "event_lists?faces-redirect=true";
+    }
+
+    public void updatePassword() throws EntityDoesNotExistsException {
+        eventBean.updatePassword(currentEvent.getId(), currentEvent.getPassword());
+    }
+
+    public void checkAttendantPassword(String pass, Long eventId, Long attendantId) throws EntityDoesNotExistsException {
+
+        if (pass != null) {
+            currentAttendantCheckPassword = false;
+            currentAttendantCheckPassword = eventBean.checkPassword(pass, eventId, attendantId);
+        }
+    }
+
+    public boolean isAttendantAParticipant(Long eventId, Long attendantId) throws EntityDoesNotExistsException {
+        return eventBean.isAttendantAParticipant(eventId, attendantId);
+    }
+    //////////G&S/////////////////
 
     public List<ManagerDTO> getManagersDisponiveisSelected() {
         return managersDisponiveisSelected;
@@ -326,7 +334,7 @@ public class EventManager {
     public void setNewEvent(EventDTO newEvent) {
         this.newEvent = newEvent;
     }
-    
+
     public List<String> getAttendantsSelected() {
         return attendantsSelected;
     }
@@ -351,5 +359,4 @@ public class EventManager {
         this.currentAttendantCheckPassword = currentAttendantCheckPassword;
     }
 
-    
 }

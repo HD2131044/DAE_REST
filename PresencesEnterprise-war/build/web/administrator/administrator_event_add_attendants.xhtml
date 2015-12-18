@@ -76,29 +76,51 @@ and open the template in the editor.
             </h:column>
 
         </h:dataTable>
+        <h3 style="color: green">Attendants Categories</h3>
+        <hr></hr>
+        <h:dataTable
+            var="user" 
+            summary="Table of Categories"
+            value="#{categoryManager.allAttendantCategories}"
+            rules="all"
+            cellpadding="10">
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Name" />
+                </f:facet>
+                <h:form>
+                    <h:outputText value="#{categoryManager.currentCategory.name}" />
+                </h:form>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Number of Attendants" />
+                </f:facet>
+                <h:form>
+                    <h:outputText value="#{categoryManager.getNumberAttendants(categoryManager.currentCategory.id)}" />
+                </h:form>
+            </h:column>
+
+        </h:dataTable>
 
         <hr></hr>   
         <h:form>
 
-            <h:selectManyCheckbox value="#{userManager.attendantsSelected}"  layout="PageDirection" 
-                                  styleClass="formLabelList"> 
+            <h:selectManyCheckbox 
+                value="#{userManager.attendantsSelected}"  
+                layout="PageDirection" 
+                styleClass="formLabelList"> 
 
                 <c:forEach var="list" items="#{userManager.attendantsDisponiveisSelected}" > 
                     <p>  <f:selectItem itemValue="#{list.name}" itemLabel="#{list.name}" /> </p>
                 </c:forEach> 
 
             </h:selectManyCheckbox> 
-
-
             <br />
-
             <h:commandButton value="Refresh" actionListener="#{userManager.addAttendantsList}" />
-            
-
-
 
             <hr></hr>    
-
 
             <h:commandButton value="Back" action="/faces/administrator/manager_details?faces-redirect=true"/>
 

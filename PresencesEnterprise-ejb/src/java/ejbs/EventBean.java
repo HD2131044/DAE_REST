@@ -5,6 +5,8 @@ import dtos.CategoryDTO;
 import dtos.EventDTO;
 import dtos.ManagerDTO;
 import entities.Attendant;
+import entities.AttendantCategory;
+import entities.Category;
 import entities.EventCategory;
 import entities.Event;
 import entities.Manager;
@@ -415,8 +417,38 @@ public class EventBean {
 
             throw new EntityDoesNotExistsException("There is no event with that id.");
         }
-        
+
         return event.isAttendantPresent(attendant);
+    }
+
+    public void addCategoryAttendants(Long categoryId, Long eventId) throws EntityDoesNotExistsException {
+        Event event = em.find(Event.class, eventId);
+        if (event == null) {
+            throw new EntityDoesNotExistsException("There is no event with that id.");
+        }
+        AttendantCategory category = em.find(AttendantCategory.class, categoryId);
+        if (category == null) {
+            throw new EntityDoesNotExistsException("There is no event with that id.");
+        }
+        for (Attendant attendant: category.getAttendants()){
+            event.addAttendant(attendant);
+        }
+    }
+
+    public void removeCategoryAttendants(Long categoryId, Long eventId) throws EntityDoesNotExistsException {
+        Event event = em.find(Event.class, eventId);
+        if (event == null) {
+            throw new EntityDoesNotExistsException("There is no event with that id.");
+        }
+        AttendantCategory category = em.find(AttendantCategory.class, categoryId);
+        if (category == null) {
+            throw new EntityDoesNotExistsException("There is no event with that id.");
+        }
+        for (Attendant attendant: category.getAttendants()){
+            if(event.getAttendants().contains(attendant)) {
+                event.getAttendants().remove(attendant);
+            }
+        }
     }
 
     EventDTO eventToDTO(Event event

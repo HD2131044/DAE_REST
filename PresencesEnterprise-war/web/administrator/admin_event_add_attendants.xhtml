@@ -76,6 +76,45 @@ and open the template in the editor.
             </h:column>
 
         </h:dataTable>
+        <h3 style="color: green">Attendants Categories</h3>
+        <hr></hr>
+        <h:dataTable
+            var="category" 
+            summary="Table of Categories"
+            value="#{categoryManager.allAttendantCategories}"
+            rules="all"
+            cellpadding="10">
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Name" />
+                </f:facet>
+                <h:form>
+                    <h:outputText value="#{category.name}" />
+                </h:form>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Number of Attendants" />
+                </f:facet>
+                <h:form>
+                    <h:outputText value="#{categoryManager.getNumberAttendants(category.id)}" />
+                </h:form>
+            </h:column>
+            
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Add/Remove Attendants" />
+                </f:facet>
+                <h:form>
+                    <h:commandButton value="Add Attendants" actionListener="#{eventManager.addCategoryAttendants(category.id,userManager.currentEvent.id)}" />
+                </h:form>
+                <h:form>
+                    <h:commandButton value="Remove Attendants" actionListener="#{eventManager.removeCategoryAttendants(category.id,userManager.currentEvent.id)}" />
+                </h:form>
+            </h:column>
+
+        </h:dataTable>
 
         <hr></hr>   
         <h:form>
@@ -88,21 +127,12 @@ and open the template in the editor.
                 </c:forEach> 
 
             </h:selectManyCheckbox> 
-
-
             <br />
 
             <h:commandButton value="Refresh" actionListener="#{userManager.addAttendantsList}" />
-            
-
-
 
             <hr></hr>    
-
-
             <h:commandButton value="Back" action="/faces/administrator/manager_details?faces-redirect=true"/>
-
-
 
         </h:form>
     </body>

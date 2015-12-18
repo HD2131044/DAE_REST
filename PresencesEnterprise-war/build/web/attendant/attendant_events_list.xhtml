@@ -93,7 +93,7 @@
                 <f:facet name="header">
                     <h:outputText value="Presence" />
                 </f:facet>
-                
+
                 <h:form rendered = "#{!eventManager.isAttendantAParticipant(event.id, userManager.currentUser.id)}">  
                     <h:outputText value="Event Closed" rendered="#{!event.openForPresence}" /> 
                     <!--<h:selectBooleanCheckbox value="{userManager.attendantPresente(event.id, userManager.currentUser.id)}" rendered="{event.openForPresence}"> 
@@ -105,10 +105,10 @@
                         <h:outputText value = "Your presence has been authorized. Thank you." rendered="#{eventManager.isAttendantAParticipant(event.id, userManager.currentUser.id)}"/>
                         <h:outputText value = "Insert a valid code to authenticate your presence." rendered="#{!eventManager.isAttendantAParticipant(event.id, userManager.currentUser.id)}"/>
 
-                </h:form>
+                    </h:form>
 
                 </h:form>
-                                    <h:outputText value = "Your presence has been authorized. Thank you." rendered="#{eventManager.isAttendantAParticipant(event.id, userManager.currentUser.id)}"/>
+                <h:outputText value = "Your presence has been authorized. Thank you." rendered="#{eventManager.isAttendantAParticipant(event.id, userManager.currentUser.id)}"/>
 
             </h:column>
 
