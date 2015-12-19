@@ -51,7 +51,7 @@ public class AttendantCategory extends Category implements Serializable {
     }
 
     public AttendantCategory(String name) {
-        this.name = name;
+        super(name);
         attendants = new LinkedList<>();
     }
   
@@ -78,24 +78,7 @@ public class AttendantCategory extends Category implements Serializable {
     public int getNumberOfAttendants(){
         return this.attendants.size();
     }
-    
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
+ 
     public List<Attendant> getAttendants() {
         return attendants;
     }

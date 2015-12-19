@@ -55,7 +55,9 @@ public class UserManager {
 
     //USERS CONTROLLER
     private boolean loginFlag = true;
+    
     private static final Logger logger = Logger.getLogger("web.UserManager");
+    private UIComponent component;
 
     private UserDTO newUser;
     private UserDTO currentUser;
@@ -72,8 +74,6 @@ public class UserManager {
 
     private String username;
     private String password;
-
-    private UIComponent component;
 
     //variavel auxiliar de veridicacao de password
     private String passwordVerify;
