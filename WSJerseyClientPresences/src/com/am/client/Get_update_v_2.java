@@ -23,7 +23,11 @@ public class Get_update_v_2 {
         Client client = ClientBuilder.newClient();
 
         HttpAuthenticationFeature feature = null;
+<<<<<<< HEAD
         feature = HttpAuthenticationFeature.basic("14", "114");
+=======
+        feature = HttpAuthenticationFeature.basic("11", "111");
+>>>>>>> 810acc2af5d9bbb05a45f4c1af2b2b6815aa335f
         client.register(feature);
 
         String resposta = "";

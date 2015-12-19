@@ -141,6 +141,7 @@ public class CategoryBean {
         }
     }
 
+//    public void updateCategory(Long id, String name) throws EntityDoesNotExistsException, MyConstraintViolationException, EntityAlreadyExistsException {
     public void updateCategory(Long id, String name) throws EntityDoesNotExistsException, MyConstraintViolationException {
         try {
 
@@ -152,16 +153,17 @@ public class CategoryBean {
             System.out.println("NAME: " + name);
 
             System.out.println("CategoryID: " + category.getId());
-            /*
-             List<Category> categories = (List<Category>) em.createNamedQuery("getAllCategories").getResultList();
-             for (EventCategory c : categories) {
-             if (name.equals(c.getName())) {
-             throw new EntityAlreadyExistsException("That category already exists.");
-             }
-             }
-             */
+            
+//             List<Category> categories = (List<Category>) em.createNamedQuery("getAllCategories").getResultList();
+//             for (Category c : categories) {
+//                if (name.equals(c.getName())) {
+//                throw new EntityAlreadyExistsException("A category with that name already exists.");
+//                 }
+//             }
+             
             category.setName(name);
             em.merge(category);
+//        } catch (EntityDoesNotExistsException | EntityAlreadyExistsException e) {
         } catch (EntityDoesNotExistsException e) {
             throw e;
         } catch (ConstraintViolationException e) {

@@ -82,23 +82,23 @@ public class EventBean {
         return null;
     }
 
-    public void updateEvent(Long id, String name, String description, String startDate, String finishDate) throws EntityDoesNotExistsException, MyConstraintViolationException {
+    public void updateEvent(Long id, String name, String description, String startDate, String finishDate) throws EntityDoesNotExistsException, EntityAlreadyExistsException, MyConstraintViolationException {
         try {
             Event event = em.find(Event.class, id);
             if (event == null) {
                 throw new EntityDoesNotExistsException("There is no event with that id.");
             }
-            /*List<Event> events = (List<Event>) em.createNamedQuery("getAllEvents").getResultList();
+            List<Event> events = (List<Event>) em.createNamedQuery("getAllEvents").getResultList();
             for (Event e : events){
-                if (name.equals(e.getName())){
-                    throw new EntityAlreadyExistsException("That event already exists.");
+                if (name.equals(e.getName()) && !e.getId().equals(event.getId())){
+                    throw new EntityAlreadyExistsException("A event with that name already exists.");
                 }
-            }*/
+            }
             event.setName(name);
             event.setDescription(description);
             event.setStartDate(startDate);
             event.setFinishDate(finishDate);
-        } catch (EntityDoesNotExistsException e) {
+        } catch (EntityDoesNotExistsException | EntityAlreadyExistsException e) {
             throw e;
         } catch (ConstraintViolationException e) {
             throw new MyConstraintViolationException(Utils.getConstraintViolationMessages(e));
@@ -434,7 +434,7 @@ public class EventBean {
         if (category == null) {
             throw new EntityDoesNotExistsException("There is no event with that id.");
         }
-        for (Attendant attendant: category.getAttendants()){
+        for (Attendant attendant : category.getAttendants()) {
             event.addAttendant(attendant);
         }
     }
@@ -448,14 +448,33 @@ public class EventBean {
         if (category == null) {
             throw new EntityDoesNotExistsException("There is no event with that id.");
         }
-        for (Attendant attendant: category.getAttendants()){
-            if(event.getAttendants().contains(attendant)) {
+        for (Attendant attendant : category.getAttendants()) {
+            if (event.getAttendants().contains(attendant)) {
                 event.getAttendants().remove(attendant);
             }
         }
     }
 
+<<<<<<< HEAD
     public EventDTO eventToDTO(Event event
+=======
+    public void novaListaPresentes(Long eventId, LinkedList<String> presentes) throws EntityDoesNotExistsException {
+        Event event = em.find(Event.class, eventId);
+        if (event == null) {
+            throw new EntityDoesNotExistsException("There is no event with that id.");
+        }
+        if (!presentes.isEmpty()) {
+            Attendant presente = null;
+            for (String st : presentes) {
+                presente = em.find(Attendant.class, (attendantBean.getAttendantByName(st).getId()));
+                event.addPresenca(presente);
+            }
+        }
+
+    }
+
+    EventDTO eventToDTO(Event event
+>>>>>>> 810acc2af5d9bbb05a45f4c1af2b2b6815aa335f
     ) {
         EventDTO eventDTO = new EventDTO(
                 event.getId(),
@@ -531,7 +550,18 @@ public class EventBean {
         return dtos;
     }
 
+<<<<<<< HEAD
     //rest - attendant  update key on event confirm presence
+=======
+    public void clearPresencesList(Long id) throws EntityDoesNotExistsException {
+        Event event = em.find(Event.class, id);
+        if (event == null) {
+            throw new EntityDoesNotExistsException("There is no event with that id.");
+        }
+        event.getPresentes().clear();
+    }
+     //rest - attendant  update key on event confirm presence
+>>>>>>> 810acc2af5d9bbb05a45f4c1af2b2b6815aa335f
     
        @RolesAllowed({"Attendant"})
      public String setPasswordOnEventOfAttendant(Long attendantId,Long eventId,String key) throws EntityDoesNotExistsException {
@@ -555,5 +585,8 @@ public class EventBean {
         return "";
     }
     
+<<<<<<< HEAD
     
+=======
+>>>>>>> 810acc2af5d9bbb05a45f4c1af2b2b6815aa335f
 }

@@ -77,10 +77,8 @@ public abstract class User implements Serializable {
 
     public User(String username, String password, String name, String email, GROUP group){
         this.username = username;
-     
         this.name = name;
         this.email = email;
-       
         this.password = hashPassword(password);
        this.group = new UserGroup(group, this);
     }

@@ -104,24 +104,24 @@ public class AttendantBean {
         }
     }
 
-    public void updateAttendant(Long id, String username, String password, String name, String email) throws EntityDoesNotExistsException, MyConstraintViolationException {
+    public void updateAttendant(Long id, String username, String password, String name, String email) throws EntityDoesNotExistsException, MyConstraintViolationException, EntityAlreadyExistsException {
         try {
             Attendant attendant = em.find(Attendant.class, id);
             if (attendant == null) {
                 throw new EntityDoesNotExistsException("There is no attendant with that id.");
             }
-//            List<Attendant> attendants = (List<Attendant>) em.createNamedQuery("getAllAttendants").getResultList();
-//            for (Attendant a : attendants){
-//                if (username.equals(a.getUserName())){
-//                    throw new EntityAlreadyExistsException("That username already exists.");
-//                }
-//            }
+            List<Attendant> attendants = (List<Attendant>) em.createNamedQuery("getAllAttendants").getResultList();
+            for (Attendant a : attendants){
+                if (name.equals(a.getUserName()) && !a.getId().equals(attendant.getId())){
+                    throw new EntityAlreadyExistsException("That username already exists.");
+                }
+            }
             attendant.setUsername(username);
             attendant.setPassword(password);
             attendant.setName(name);
             attendant.setEmail(email);
             em.merge(attendant);
-        } catch (EntityDoesNotExistsException e) {
+        } catch (EntityDoesNotExistsException | EntityAlreadyExistsException e) {
             throw e;
         } catch (ConstraintViolationException e) {
             throw new MyConstraintViolationException(Utils.getConstraintViolationMessages(e));
