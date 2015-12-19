@@ -177,7 +177,7 @@ public class AttendantBean {
 
             event.addAttendant(attendant);
             attendant.addEvent(event);
-            //event.addAttendantPresence(attendant, true);
+            
             
         } catch (EntityDoesNotExistsException | AttendantEnrolledException e) {
             throw e;
