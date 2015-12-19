@@ -168,15 +168,15 @@ and open the template in the editor.
             <hr></hr>
             <h:commandButton value="Change Status" actionListener="#{eventManager.changeStatus}" action="/faces/administrator/event_details?faces-redirect=true"  />
             <br></br>
-            <h:form rendered = "#{eventManager.currentEvent.openForEnroll}">
-                <h:outputText value = "Attendants Password: " />
 
-                <h:inputText value = "#{eventManager.currentEvent.password}" />
-                <h:commandButton value="Set Password" action="#{eventManager.updatePassword}"/>
-            </h:form>
             <hr></hr>    
         </h:form>
+        <h:form rendered = "#{eventManager.currentEvent.openForEnroll}">
+            <h:outputText value = "Attendants Password: " />
 
+            <h:inputText value = "#{eventManager.currentEvent.password}" />
+            <h:commandButton value="Set Password" action="#{eventManager.updatePassword}"/>
+        </h:form>
         <h:form>   
             <h:commandButton value="Back" action="/faces/administrator/event_lists?faces-redirect=true"/>
         </h:form>
