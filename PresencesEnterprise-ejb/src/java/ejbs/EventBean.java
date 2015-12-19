@@ -156,7 +156,7 @@ public class EventBean {
         eventToDTO(event);
 
     }
-
+//rest
 //    public List<EventDTO> getManagerEvents(Long managerId) throws EntityDoesNotExistsException {
 //        try {
 //            Manager manager = em.find(Manager.class, managerId);
@@ -176,6 +176,10 @@ public class EventBean {
             Attendant attendant = em.find(Attendant.class, attendantId);
             if (attendant == null) {
                 throw new EntityDoesNotExistsException("Attendant does not exists.");
+            }
+            for(Event event: attendant.getEvents()){
+                System.out.println("EVENT-"+ event.isOpenForPresence());
+                
             }
             return eventsToDTOs(attendant.getEvents());
         } catch (EntityDoesNotExistsException e) {
@@ -451,7 +455,7 @@ public class EventBean {
         }
     }
 
-    EventDTO eventToDTO(Event event
+    public EventDTO eventToDTO(Event event
     ) {
         EventDTO eventDTO = new EventDTO(
                 event.getId(),
@@ -465,8 +469,7 @@ public class EventBean {
         return eventDTO;
     }
 
-    List<EventDTO> eventsToDTOs(List<Event> events
-    ) {
+    public List<EventDTO> eventsToDTOs(List<Event> events) {
         List<EventDTO> dtos = new ArrayList<>();
         for (Event e : events) {
             dtos.add(eventToDTO(e));
@@ -474,14 +477,14 @@ public class EventBean {
         return dtos;
     }
 
-    CategoryDTO categoryToDTO(EventCategory category
+   public  CategoryDTO categoryToDTO(EventCategory category
     ) {
         return new CategoryDTO(
                 category.getId(),
                 category.getName());
     }
 
-    List<CategoryDTO> categoriesToDTOs(List<EventCategory> categories
+    public List<CategoryDTO> categoriesToDTOs(List<EventCategory> categories
     ) {
         List<CategoryDTO> dtos = new ArrayList<>();
         for (EventCategory c : categories) {
@@ -490,7 +493,7 @@ public class EventBean {
         return dtos;
     }
 
-    AttendantDTO attendantToDTO(Attendant attendant
+    public AttendantDTO attendantToDTO(Attendant attendant
     ) {
         return new AttendantDTO(
                 attendant.getId(),
@@ -500,7 +503,7 @@ public class EventBean {
                 attendant.getEmail());
     }
 
-    List<AttendantDTO> attendantsToDTOs(List<Attendant> attendants
+    public List<AttendantDTO> attendantsToDTOs(List<Attendant> attendants
     ) {
         List<AttendantDTO> dtos = new ArrayList<>();
         for (Attendant a : attendants) {
@@ -509,7 +512,7 @@ public class EventBean {
         return dtos;
     }
 
-    ManagerDTO managerToDTO(Manager manager
+   public  ManagerDTO managerToDTO(Manager manager
     ) {
         return new ManagerDTO(
                 manager.getId(),
@@ -519,7 +522,7 @@ public class EventBean {
                 manager.getEmail());
     }
 
-    List<ManagerDTO> managersToDTOs(List<Manager> managers
+   public  List<ManagerDTO> managersToDTOs(List<Manager> managers
     ) {
         List<ManagerDTO> dtos = new ArrayList<>();
         for (Manager m : managers) {
@@ -528,4 +531,29 @@ public class EventBean {
         return dtos;
     }
 
+    //rest - attendant  update key on event confirm presence
+    
+       @RolesAllowed({"Attendant"})
+     public String setPasswordOnEventOfAttendant(Long attendantId,Long eventId,String key) throws EntityDoesNotExistsException {
+        try {
+            Attendant attendant = em.find(Attendant.class, attendantId);
+            if (attendant == null) {
+                throw new EntityDoesNotExistsException("Attendant does not exists.");
+            }
+            for (Event event :attendant.getEvents()){
+                if(eventId == event.getId()){
+                    //set password
+                    System.out.println("Aqui é onde vai dispultar o set da Password : "+key);
+                    return "Efectuado com Sucesso";
+                }
+            }
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+        return "";
+    }
+    
+    
 }

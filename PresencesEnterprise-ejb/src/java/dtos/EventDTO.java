@@ -37,6 +37,7 @@ public class EventDTO {
         this.name = null;
         this.description = null;
         this.openForEnroll = false;
+        this.openForPresence = false;
         this.finishDate = null;
         this.startDate = null;
         this.password = null;
