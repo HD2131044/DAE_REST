@@ -156,7 +156,7 @@ public class EventBean {
         eventToDTO(event);
 
     }
-
+//rest
 //    public List<EventDTO> getManagerEvents(Long managerId) throws EntityDoesNotExistsException {
 //        try {
 //            Manager manager = em.find(Manager.class, managerId);
@@ -176,6 +176,10 @@ public class EventBean {
             Attendant attendant = em.find(Attendant.class, attendantId);
             if (attendant == null) {
                 throw new EntityDoesNotExistsException("Attendant does not exists.");
+            }
+            for(Event event: attendant.getEvents()){
+                System.out.println("EVENT-"+ event.isOpenForPresence());
+                
             }
             return eventsToDTOs(attendant.getEvents());
         } catch (EntityDoesNotExistsException e) {
@@ -451,6 +455,8 @@ public class EventBean {
         }
     }
 
+
+
     public void novaListaPresentes(Long eventId, LinkedList<String> presentes) throws EntityDoesNotExistsException {
         Event event = em.find(Event.class, eventId);
         if (event == null) {
@@ -466,8 +472,7 @@ public class EventBean {
 
     }
 
-    EventDTO eventToDTO(Event event
-    ) {
+    EventDTO eventToDTO(Event event) {
         EventDTO eventDTO = new EventDTO(
                 event.getId(),
                 event.getName(),
@@ -480,8 +485,7 @@ public class EventBean {
         return eventDTO;
     }
 
-    List<EventDTO> eventsToDTOs(List<Event> events
-    ) {
+    public List<EventDTO> eventsToDTOs(List<Event> events) {
         List<EventDTO> dtos = new ArrayList<>();
         for (Event e : events) {
             dtos.add(eventToDTO(e));
@@ -489,14 +493,14 @@ public class EventBean {
         return dtos;
     }
 
-    CategoryDTO categoryToDTO(EventCategory category
+   public  CategoryDTO categoryToDTO(EventCategory category
     ) {
         return new CategoryDTO(
                 category.getId(),
                 category.getName());
     }
 
-    List<CategoryDTO> categoriesToDTOs(List<EventCategory> categories
+    public List<CategoryDTO> categoriesToDTOs(List<EventCategory> categories
     ) {
         List<CategoryDTO> dtos = new ArrayList<>();
         for (EventCategory c : categories) {
@@ -505,7 +509,7 @@ public class EventBean {
         return dtos;
     }
 
-    AttendantDTO attendantToDTO(Attendant attendant
+    public AttendantDTO attendantToDTO(Attendant attendant
     ) {
         return new AttendantDTO(
                 attendant.getId(),
@@ -515,7 +519,7 @@ public class EventBean {
                 attendant.getEmail());
     }
 
-    List<AttendantDTO> attendantsToDTOs(List<Attendant> attendants
+    public List<AttendantDTO> attendantsToDTOs(List<Attendant> attendants
     ) {
         List<AttendantDTO> dtos = new ArrayList<>();
         for (Attendant a : attendants) {
@@ -524,7 +528,7 @@ public class EventBean {
         return dtos;
     }
 
-    ManagerDTO managerToDTO(Manager manager
+   public  ManagerDTO managerToDTO(Manager manager
     ) {
         return new ManagerDTO(
                 manager.getId(),
@@ -534,7 +538,7 @@ public class EventBean {
                 manager.getEmail());
     }
 
-    List<ManagerDTO> managersToDTOs(List<Manager> managers
+   public  List<ManagerDTO> managersToDTOs(List<Manager> managers
     ) {
         List<ManagerDTO> dtos = new ArrayList<>();
         for (Manager m : managers) {
@@ -563,7 +567,20 @@ public class EventBean {
                 if(eventId == event.getId()){
                     //set password
                     System.out.println("Aqui é onde vai dispultar o set da Password : "+key);
-                    return "Efectuado com Sucesso";
+                    System.out.println("key : " +  key +" EVENT PASS : "+event.getPassword() );
+                    if(key.equals(event.getPassword())){
+                         System.out.println("TESTE :"+ event.getPresentes().contains(attendant));
+                        if(event.getPresentes().contains(attendant)){
+                           
+                            return "Ja se encontra marcado como Presente no Evento !";
+                        }
+                       event.addPresenca(attendant);
+                     return "Chave validada . Efectuada a sua confirmacao com Sucesso";
+                   }else{
+                   return "Chave invalida . Volte a tentar com uma chave valida";
+                   
+                   }
+                    
                 }
             }
         } catch (EntityDoesNotExistsException e) {
@@ -573,5 +590,5 @@ public class EventBean {
         }
         return "";
     }
-    
+
 }

@@ -219,30 +219,39 @@ public class ListEventsForm extends javax.swing.JFrame {
         Date date = new Date();
 
         int i = 0;
-        System.out.println("tamanho lista eventos:" + returnedEvents.size());
-        boolean oneToSubmmit=false;
-        for (i = 0; i < returnedEvents.size(); i++) {
-           
-            try {
-                if (isInProgress(dateFormat.format(date), returnedEvents.get(i).getStartDate(), returnedEvents.get(i).getFinishDate()) 
-                        && jTable2.getModel().getValueAt(i, 5).toString() != "" && returnedEvents.get(i).isOpenForPresence()) {
 
+       // System.out.println("tamanho lista eventos:" + returnedEvents.size());
+        //System.out.println("»»»»»KEY PRIMEIRO ELEMENTO =" + jTable2.getModel().getValueAt(0, 4).toString());
+        //System.out.println("»»»»»KEY SEGUNDO ELEMENTO =" + jTable2.getModel().getValueAt(1, 4).toString());
+        boolean oneToSubmmit = false;
+        for (i = 0; i <= (returnedEvents.size() - 1); i++) {
+           // System.out.println("#####SIZE:" + returnedEvents.size());
+            try {
+               // System.out.println("»»»»»1");
+              //  System.out.println("»»»»»ESTA EM PROGRESSO ->" + isInProgress(dateFormat.format(date), returnedEvents.get(i).getStartDate(), returnedEvents.get(i).getFinishDate()));
+               // System.out.println("»»»»»TEM KEY =" + jTable2.getModel().getValueAt(i, 4).toString());
+                if (isInProgress(dateFormat.format(date), returnedEvents.get(i).getStartDate(), returnedEvents.get(i).getFinishDate())
+                        && !jTable2.getModel().getValueAt(i, 5).toString().equals("")) {
+                    System.out.println("»»»»»ENTROU");
                     //its an event in progress that have the key with some input text by the user
-                    System.out.println("Evento Preenchido com key : " + jTable2.getModel().getValueAt(i, 5));
+                  //  System.out.println("Evento Preenchido com key : " + jTable2.getModel().getValueAt(i, 4));
                     changeKeyOnEvent(returnedEvents.get(i).getId(), jTable2.getModel().getValueAt(i, 5).toString());
                     //TODO - it will commit the key for the rest service
                     //TODO - how he confirm that the key is stored by the rest service?
-                    oneToSubmmit=true;
+                    oneToSubmmit = true;
+                    break;
                 }
-               
-                
+
+
             } catch (ParseException ex) {
                 Logger.getLogger(ListEventsForm.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
+
          if(!oneToSubmmit)
                  JOptionPane.showMessageDialog(null, "ERROR !!! \n Verify if you have a KEY on event that is OPEN and IN PROGRESS for submmit presence !");
+
 
 
     }//GEN-LAST:event_jButton3ActionPerformed
@@ -328,7 +337,9 @@ public class ListEventsForm extends javax.swing.JFrame {
 
             final DefaultTableModel model2 = new DefaultTableModel(dataRow, dataTitle) {
                 Class[] types = new Class[]{
+
                     java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+
                 };
                 boolean[] canEdit = new boolean[]{
                     false, false, false, false,false, true
@@ -381,7 +392,9 @@ public class ListEventsForm extends javax.swing.JFrame {
         Client client = ClientBuilder.newClient();
 
         HttpAuthenticationFeature feature = null;
+
         System.out.println("HTTP REQUEST :  user + pass"+username+" -> "+ password);
+
         feature = HttpAuthenticationFeature.basic(username, password);
         client.register(feature);
 
