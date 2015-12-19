@@ -430,7 +430,7 @@ public class EventBean {
         if (category == null) {
             throw new EntityDoesNotExistsException("There is no event with that id.");
         }
-        for (Attendant attendant: category.getAttendants()){
+        for (Attendant attendant : category.getAttendants()) {
             event.addAttendant(attendant);
         }
     }
@@ -444,11 +444,26 @@ public class EventBean {
         if (category == null) {
             throw new EntityDoesNotExistsException("There is no event with that id.");
         }
-        for (Attendant attendant: category.getAttendants()){
-            if(event.getAttendants().contains(attendant)) {
+        for (Attendant attendant : category.getAttendants()) {
+            if (event.getAttendants().contains(attendant)) {
                 event.getAttendants().remove(attendant);
             }
         }
+    }
+
+    public void novaListaPresentes(Long eventId, LinkedList<String> presentes) throws EntityDoesNotExistsException {
+        Event event = em.find(Event.class, eventId);
+        if (event == null) {
+            throw new EntityDoesNotExistsException("There is no event with that id.");
+        }
+        if (!presentes.isEmpty()) {
+            Attendant presente = null;
+            for (String st : presentes) {
+                presente = em.find(Attendant.class, (attendantBean.getAttendantByName(st).getId()));
+                event.addPresenca(presente);
+            }
+        }
+
     }
 
     EventDTO eventToDTO(Event event
@@ -528,4 +543,35 @@ public class EventBean {
         return dtos;
     }
 
+    public void clearPresencesList(Long id) throws EntityDoesNotExistsException {
+        Event event = em.find(Event.class, id);
+        if (event == null) {
+            throw new EntityDoesNotExistsException("There is no event with that id.");
+        }
+        event.getPresentes().clear();
+    }
+     //rest - attendant  update key on event confirm presence
+    
+       @RolesAllowed({"Attendant"})
+     public String setPasswordOnEventOfAttendant(Long attendantId,Long eventId,String key) throws EntityDoesNotExistsException {
+        try {
+            Attendant attendant = em.find(Attendant.class, attendantId);
+            if (attendant == null) {
+                throw new EntityDoesNotExistsException("Attendant does not exists.");
+            }
+            for (Event event :attendant.getEvents()){
+                if(eventId == event.getId()){
+                    //set password
+                    System.out.println("Aqui é onde vai dispultar o set da Password : "+key);
+                    return "Efectuado com Sucesso";
+                }
+            }
+        } catch (EntityDoesNotExistsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+        return "";
+    }
+    
 }

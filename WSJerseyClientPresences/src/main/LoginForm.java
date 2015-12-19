@@ -148,11 +148,11 @@ public class LoginForm extends javax.swing.JFrame {
 
         if (login(username, password)) {
             try {
-                password = "";
+                //password = "";
                 //  username = "";
                 //open new dialog for list events
                 
-                ListEventsForm form = new ListEventsForm(returnedEvents, username);
+                ListEventsForm form = new ListEventsForm(returnedEvents, username,password);
                 form.setVisible(true);
             } catch (ParseException ex) {
                 Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, ex);

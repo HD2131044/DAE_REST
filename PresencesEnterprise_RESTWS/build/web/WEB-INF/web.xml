@@ -43,6 +43,19 @@
            
         </auth-constraint>
     </security-constraint>
+    <security-constraint>
+        <display-name>AttendantConstraintWS_1</display-name>
+        <web-resource-collection>
+            <web-resource-name>events</web-resource-name>
+            <description/>
+            <url-pattern>/webapi/events/attendant_event_update_key</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description/>
+            <role-name>Attendant</role-name>
+           
+        </auth-constraint>
+    </security-constraint>
     <login-config>
         <auth-method>BASIC</auth-method>
         <realm-name>dae_project_realm</realm-name>

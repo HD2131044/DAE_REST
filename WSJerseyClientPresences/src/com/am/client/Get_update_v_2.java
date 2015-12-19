@@ -5,7 +5,6 @@
  */
 package com.am.client;
 
-import java.util.List;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.GenericType;
@@ -14,41 +13,40 @@ import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 
 /**
  *
- * @author rmartin
+ * @author Tecnico
  */
-public class WSJerseyClient {
+public class Get_update_v_2 {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
+
         String baseUri = "http://localhost:8080/PresencesEnterprise_RESTWS/webapi";
         Client client = ClientBuilder.newClient();
+
         HttpAuthenticationFeature feature = null;
-        System.out.println("teste--");
-        //USERNAME + PASSWORD
         feature = HttpAuthenticationFeature.basic("11", "111");
         client.register(feature);
-        List<EventDTO> returnedEvents = null;
-        System.out.println("teste-1");
+
+        String resposta = "";
         try {
-            System.out.println("teste-2");
-            returnedEvents = client.target(baseUri)
-                    .path("/events/attendant_events")//.path("/attendant/attendant_events")
+            //System.out.println("teste-2");
+            resposta = client.target(baseUri)
+                    .path("/events/attendant_event_update_key")
+                    .queryParam("event_id", "23")
+                    .queryParam("key", "tasacw222wo")
                     .request(MediaType.APPLICATION_XML)
-                    .get(new GenericType<List<EventDTO>>() {
+                    .get(new GenericType<String>() {
                     });
-            if (returnedEvents == null) {
-                System.out.println("Returned null...");
-                return;
+            // System.out.println("teste-3");
+            if (resposta == "") {
+               // System.out.println("teste-4");
+                // System.out.println("Nao efectuou a alteracaode presenca confirmada");
+                // return;
             } else {
-
-                for (EventDTO event : returnedEvents) {
-                    System.out.println(event.getName());
-                }
-
+               // System.out.println("teste-5");
+                //  System.out.println("Resposta ao pedido do Cliente: "+ resposta);
             }
         } catch (Exception e) {
+            // System.out.println("teste-ERROR");
             System.err.println(e.getMessage());
         }
 

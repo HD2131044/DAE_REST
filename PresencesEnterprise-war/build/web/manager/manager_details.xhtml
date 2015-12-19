@@ -107,8 +107,8 @@
 
                 <h:form>
                     <h:outputText value="close" rendered="#{!event.openForPresence}"/>
-                    <h:commandLink id="details" action="/faces/manager/manager_event_add_attendants?faces-redirect=true" >
-                        <h:outputText value="change state" rendered="#{event.openForPresence}"/>
+                    <h:commandLink id="details" action="/faces/manager/manager_event_add_presences?faces-redirect=true" >
+                        <h:outputText value="Mark presences" rendered="#{event.openForPresence}" />
                         <f:setPropertyActionListener target="#{userManager.currentEvent}" value="#{event}" />
                     </h:commandLink>
                     <h:commandButton value="s" actionListener="#{eventManager.changePresenceStatus(event.id)}"/>

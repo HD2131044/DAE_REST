@@ -16,7 +16,13 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.TableColumn;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 
 /**
  *
@@ -26,16 +32,18 @@ public class ListEventsForm extends javax.swing.JFrame {
 
     List<EventDTO> returnedEvents;
     String username = "";
+    String password = "";
 
     /**
      * Creates new form ListEventsForm
      *
      * @param returnedEvents
      */
-    public ListEventsForm(List<EventDTO> returnedEvents, String username) throws ParseException {
+    public ListEventsForm(List<EventDTO> returnedEvents, String username, String password) throws ParseException {
         initComponents();
         this.returnedEvents = returnedEvents;
         this.username = username;
+        this.password = password;
 
         jLabel_currentUser.setText(username);
         System.out.println(username);
@@ -71,20 +79,20 @@ public class ListEventsForm extends javax.swing.JFrame {
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Event", "Start Date", "Close Date", "IN PROGRESS", "Key Confirm"
+                "Event", "Start Date", "Close Date", "IN PROGRESS", "OPEN", "Key Confirm"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true
+                false, false, false, false, false, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -131,7 +139,7 @@ public class ListEventsForm extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -212,24 +220,31 @@ public class ListEventsForm extends javax.swing.JFrame {
 
         int i = 0;
         System.out.println("tamanho lista eventos:" + returnedEvents.size());
+        boolean oneToSubmmit=false;
         for (i = 0; i < returnedEvents.size(); i++) {
+           
             try {
-                if (isInProgress(dateFormat.format(date), returnedEvents.get(i).getStartDate(), returnedEvents.get(i).getFinishDate()) && jTable2.getModel().getValueAt(i, 4) != "") {
+                if (isInProgress(dateFormat.format(date), returnedEvents.get(i).getStartDate(), returnedEvents.get(i).getFinishDate()) 
+                        && jTable2.getModel().getValueAt(i, 5).toString() != "" && returnedEvents.get(i).isOpenForPresence()) {
 
                     //its an event in progress that have the key with some input text by the user
-                    System.out.println("Evento Preenchido com key : " + jTable2.getModel().getValueAt(i, 4));
-
+                    System.out.println("Evento Preenchido com key : " + jTable2.getModel().getValueAt(i, 5));
+                    changeKeyOnEvent(returnedEvents.get(i).getId(), jTable2.getModel().getValueAt(i, 5).toString());
                     //TODO - it will commit the key for the rest service
                     //TODO - how he confirm that the key is stored by the rest service?
-                    
+                    oneToSubmmit=true;
                 }
+               
+                
             } catch (ParseException ex) {
                 Logger.getLogger(ListEventsForm.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
-        
-        
+         if(!oneToSubmmit)
+                 JOptionPane.showMessageDialog(null, "ERROR !!! \n Verify if you have a KEY on event that is OPEN and IN PROGRESS for submmit presence !");
+
+
     }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
@@ -281,8 +296,8 @@ public class ListEventsForm extends javax.swing.JFrame {
 
     private void actualizarListaEventos() throws ParseException {
         if (returnedEvents != null) {
-            Object[] dataTitle = {"Event", "Start Date", "Close Date", "IN PROGRESS", "Key Confirm"};
-            Object[][] dataRow = new Object[returnedEvents.size()][5];
+            Object[] dataTitle = {"Event", "Start Date", "Close Date", "IN PROGRESS","OPEN" ,"Key Confirm"};
+            Object[][] dataRow = new Object[returnedEvents.size()][6];
 
             DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
             Date date = new Date();
@@ -290,7 +305,7 @@ public class ListEventsForm extends javax.swing.JFrame {
 
             int x = 0;
             for (EventDTO event : returnedEvents) {
-
+                System.out.println("OPENS EV------"+ event.isOpenForPresence());
                 dataRow[x][0] = event.getName();
                 dataRow[x][1] = event.getStartDate();
                 dataRow[x][2] = event.getFinishDate();
@@ -299,18 +314,24 @@ public class ListEventsForm extends javax.swing.JFrame {
                 } else {
                     dataRow[x][3] = "NOT IN PROGRESS";
                 }
+                 if (event.isOpenForPresence()) {
+                    dataRow[x][4]  = "Open";
+                } else {
+                     dataRow[x][4]  = "Close";
+                }
+                //dataRow[x][4] = event.isOpenForPresence();
 
-                dataRow[x][4] = ""; //key  presenca
+                dataRow[x][5] = ""; //key  presenca
 
                 x++;
             }
 
             final DefaultTableModel model2 = new DefaultTableModel(dataRow, dataTitle) {
                 Class[] types = new Class[]{
-                    java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                    java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
                 };
                 boolean[] canEdit = new boolean[]{
-                    false, false, false, false, true
+                    false, false, false, false,false, true
                 };
 
                 @Override
@@ -352,6 +373,37 @@ public class ListEventsForm extends javax.swing.JFrame {
         } else {
             return false;
         }
+    }
+
+    private void changeKeyOnEvent(Long event_id, String key) {
+
+        String baseUri = "http://localhost:8080/PresencesEnterprise_RESTWS/webapi";
+        Client client = ClientBuilder.newClient();
+
+        HttpAuthenticationFeature feature = null;
+        System.out.println("HTTP REQUEST :  user + pass"+username+" -> "+ password);
+        feature = HttpAuthenticationFeature.basic(username, password);
+        client.register(feature);
+
+        String resposta = "";
+        try {
+            //System.out.println("teste-2");
+            resposta = client.target(baseUri)
+                    .path("/events/attendant_event_update_key")
+                    .queryParam("event_id", event_id)
+                    .queryParam("key", key)
+                    .request(MediaType.APPLICATION_XML)
+                    .get(new GenericType<String>() {
+                    });
+
+            JOptionPane.showMessageDialog(null, resposta);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+            // System.out.println("teste-ERROR");
+            System.err.println(e.getMessage());
+        }
+
     }
 
 }
