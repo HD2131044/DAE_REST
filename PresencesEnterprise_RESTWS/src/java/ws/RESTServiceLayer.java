@@ -18,6 +18,7 @@ import javax.ejb.EJB;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
@@ -28,71 +29,57 @@ import javax.ws.rs.core.SecurityContext;
  */
 @Path("/events")
 public class RESTServiceLayer {
-    
-    
-    
+
     @EJB
     private EventBean eventBean;
-    
+
     @EJB
-   private AttendantBean attendantBean;
-    
-    @Context private SecurityContext securityContext;
-  
-   /* @GET
-    @RolesAllowed({"Administrator"})
+    private AttendantBean attendantBean;
+
+    @Context
+    private SecurityContext securityContext;
+
+    //UPDATE EVENT PRESENCE KEY
+    @GET
+    @RolesAllowed({"Attendant"})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("all")
-    public List<StudentDTO> getAll() {
-        return studentBean.getAll();
+    @Path("attendant_event_update_key")
+    public String setPasswordOnEventOfAttendant(
+            @QueryParam("event_id") Long event_id, @QueryParam("key") String key) {
+        System.out.println("ivent id =" + event_id);
+        System.out.println("key =" + key);
+        String message ="";
+        try {
+            System.out.println("attendant name from rest : =" + securityContext.getUserPrincipal().getName());
+            AttendantDTO att = attendantBean.getAttendant(securityContext.getUserPrincipal().getName());
+            System.out.println("attendant ID =" + att.getId());
+            message = eventBean.setPasswordOnEventOfAttendant(att.getId(), event_id, key);
+            return message;
+        } catch (EntityDoesNotExistsException ex) {
+            Logger.getLogger(RESTServiceLayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "";
+
     }
-    */
+
+    
+     //GET ATTENDANT LIST EVENTS 
     @GET
     @RolesAllowed({"Attendant"})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("attendant_events")
     public List<EventDTO> getAttendantEvents() {
-       System.out.println("chegou pedido");
+        System.out.println("chegou pedido");
         List<EventDTO> events = null;
         try {
-             AttendantDTO att = attendantBean.getAttendant(securityContext.getUserPrincipal().getName());
-            events =    eventBean.getAttendantEvents(att.getId());
+            AttendantDTO att = attendantBean.getAttendant(securityContext.getUserPrincipal().getName());
+            System.out.println("attendant name from rest : =" + securityContext.getUserPrincipal().getName());
+            events = eventBean.getAttendantEvents(att.getId());
         } catch (EntityDoesNotExistsException ex) {
             Logger.getLogger(RESTServiceLayer.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
         return events;
     }
-    
-    //update event key
- /* @POST
-    @RolesAllowed({"Attendant"})
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("attendant_event_update_key")
-    
-     /*public String updateStudentREST() {
-       try {
-           client.target(baseUri)
-                   .path("students/update")
-                   .path(currentStudent.getUsername())
-                   .path(currentStudent.getPassword())
-                   .path(currentStudent.getName())
-                   .path(currentStudent.getEmail())
-                   .path(Integer.toString(currentStudent.getCourseCode()))
-                   .request(MediaType.TEXT_PLAIN)
-                   .post(Entity.text("A"));
-           
-           return "/faces/index?faces-redirect=true";
 
-       } catch (ResponseProcessingException ex) {
-           logger.log(Level.SEVERE, "ResponseProcessingException thrown");
-           logger.log(Level.SEVERE, "Error is {0}", ex.getMessage());
-       } catch (Exception e) {
-           FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-       }
-       return "admin_students_update";
-   }
-  */
-    
-    
 }

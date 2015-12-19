@@ -1,6 +1,5 @@
 package web;
 
-import auxCategories.UserType;
 import exceptions.PasswordValidationException;
 import dtos.AdministratorDTO;
 import dtos.AttendantDTO;
@@ -13,6 +12,7 @@ import ejbs.AttendantBean;
 import ejbs.CategoryBean;
 import ejbs.EventBean;
 import ejbs.ManagerBean;
+import entities.Attendant;
 import entities.User;
 import entities.UserGroup;
 import exceptions.AttendantEnrolledException;
@@ -20,10 +20,9 @@ import exceptions.AttendantNotEnrolledException;
 import exceptions.EntityAlreadyExistsException;
 import exceptions.EntityDoesNotExistsException;
 import exceptions.EventEnrolledException;
-import exceptions.ManagerEnrolledException;
-import exceptions.ManagerNotEnrolledException;
 import exceptions.MyConstraintViolationException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -82,6 +81,7 @@ public class UserManager {
     private List<AttendantDTO> attendantsDisponiveisSelected = new ArrayList<>();
     private List<ManagerDTO> managersDisponiveisSelected = new ArrayList<>();
     private List<String> attendantsSelected;
+    private List<String> attendantsPresentSelected = new ArrayList<>();
     private List<String> categoriesSelected;
     private List<String> managersSelected;
 
@@ -677,15 +677,13 @@ public class UserManager {
     }
 
     public String addAttendantsList() throws EntityDoesNotExistsException, AttendantNotEnrolledException, AttendantEnrolledException {
-        System.out.println("Eeeeeeeeevent ID: ");
+        
         for (AttendantDTO att1 : eventBean.getEventAttendants(currentEvent.getName())) {
             attendantBean.unrollAttendantInEvent(att1.getId(), currentEvent.getId());
         }
         eventBean.clearAllAttendantsInEvent(currentEvent.getName());
 
         for (String str : attendantsSelected) {
-            System.err.println("STRINGG: " + str);
-            System.out.println("LALALAL: " + attendantBean.getAttendantByName(str));
             //System.out.println(currentEvent.getId());
 
             attendantBean.enrollAttendantInEvent((attendantBean.getAttendantByName(str)).getId(), currentEvent.getId());
@@ -708,6 +706,17 @@ public class UserManager {
             }
 
         }
+    }
+    
+    public String presencesList() throws EntityDoesNotExistsException, AttendantNotEnrolledException, AttendantEnrolledException {
+        
+        LinkedList<String> presences = new LinkedList<>();
+        eventBean.clearPresencesList(currentEvent.getId());
+        for (String str : attendantsPresentSelected) {
+            presences.add(str);           
+        }    
+        eventBean.novaListaPresentes(currentEvent.getId(), presences);
+        return "/faces/administrator/event_add_attendants?faces-redirect=true";
     }
 
 //    public void actualizarManagersSelected() {
@@ -954,6 +963,16 @@ public class UserManager {
     public void setPasswordVerify(String passwordVerify) {
         this.passwordVerify = passwordVerify;
     }
+
+    public List<String> getAttendantsPresentSelected() {
+        return attendantsPresentSelected;
+    }
+
+    public void setAttendantsPresentSelected(List<String> attendantsPresentSelected) {
+        this.attendantsPresentSelected = attendantsPresentSelected;
+    }
+    
+    
   
 }
 
