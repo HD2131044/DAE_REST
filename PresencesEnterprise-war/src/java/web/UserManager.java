@@ -69,7 +69,7 @@ public class UserManager {
     private EventDTO currentEvent;
     private CategoryDTO newCategory;
     private CategoryDTO currentCategory;
-    
+
     private String username;
     private String password;
 
@@ -100,45 +100,48 @@ public class UserManager {
         currentManager = new ManagerDTO();
         currentUser = new UserDTO();
     }
-    
+
 ////////////////////////////////////////////    
 //Retirado do LoginManager//////////////////
-    
- /**
-    * Verifica se existe algum utilizador autenticado.
-    * @return true se há algum utilizador autenticado e, falso em caso contrário.
-    */
-   public boolean isSomeUserAuthenticated() {
-       return FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal() != null;
-   }      
-  
-   /**
-    * Verifica se o utilizador atual pertence a determinado role.
-    * Não é utilizado neste projeto.
-    * @param role a verificar
-    * @return boolean true se o utilizador atual pertencer ao role e false em caso contrário.
-    */    
-   public boolean isUserInRole(String role) {
-       return (isSomeUserAuthenticated() &&
-               FacesContext.getCurrentInstance().getExternalContext().isUserInRole(role));
-   }    
-  
-   public String tratarLoginErrado(){
-       if(isSomeUserAuthenticated()){
-           logout();
-       }
-      
-       // return "index.xhtml?faces-redirect=true"; //Usar esta linha se a página inicial for a página index
-       return "faces/index_login.xhtml?faces-redirect=true"; //Usar esta linha se a página inicial for a página index_login
-   }
-    
-   public String login() {
+    /**
+     * Verifica se existe algum utilizador autenticado.
+     *
+     * @return true se há algum utilizador autenticado e, falso em caso
+     * contrário.
+     */
+    public boolean isSomeUserAuthenticated() {
+        return FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal() != null;
+    }
+
+    /**
+     * Verifica se o utilizador atual pertence a determinado role. Não é
+     * utilizado neste projeto.
+     *
+     * @param role a verificar
+     * @return boolean true se o utilizador atual pertencer ao role e false em
+     * caso contrário.
+     */
+    public boolean isUserInRole(String role) {
+        return (isSomeUserAuthenticated()
+                && FacesContext.getCurrentInstance().getExternalContext().isUserInRole(role));
+    }
+
+    public String tratarLoginErrado() {
+        if (isSomeUserAuthenticated()) {
+            logout();
+        }
+
+        // return "index.xhtml?faces-redirect=true"; //Usar esta linha se a página inicial for a página index
+        return "faces/index_login.xhtml?faces-redirect=true"; //Usar esta linha se a página inicial for a página index_login
+    }
+
+    public String login() {
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
-        try {           
-            System.out.println("USER_TRY_: " +this.username+this.password);
+        try {
+            System.out.println("USER_TRY_: " + this.username + this.password);
 //            request.login(this.username, this.password); 
-            request.login(administratorBean.getUserIdByUserName(this.username)+"",this.password);         
+            request.login(administratorBean.getUserIdByUserName(this.username) + "", this.password);
         } catch (ServletException e) {
             logger.log(Level.WARNING, e.getMessage());
             //System.out.println("USER: " +this.username+this.password);
@@ -160,15 +163,15 @@ public class UserManager {
 
         //!!!!!!!!!!!!
         return "faces/error?faces-redirect=true";
-    } 
-   
-   //Melhorar para não usar User no UserManager apenas UserDTO
-    public void getCurrentUserFromLogIn(){
-       User user = administratorBean.getUserByUserName(username);
-       currentUser = userToDTO(user);
     }
-    
-     private UserDTO userToDTO(User user) {
+
+    //Melhorar para não usar User no UserManager apenas UserDTO
+    public void getCurrentUserFromLogIn() {
+        User user = administratorBean.getUserByUserName(username);
+        currentUser = userToDTO(user);
+    }
+
+    private UserDTO userToDTO(User user) {
         return new UserDTO(
                 user.getId(),
                 user.getUserName(),
@@ -179,21 +182,21 @@ public class UserManager {
     }
 
     public String logout() {
-       FacesContext context = FacesContext.getCurrentInstance();
+        FacesContext context = FacesContext.getCurrentInstance();
 
-       // remove data from beans:
-       for (String bean : context.getExternalContext().getSessionMap().keySet()) {
-           context.getExternalContext().getSessionMap().remove(bean);
-       }
+        // remove data from beans:
+        for (String bean : context.getExternalContext().getSessionMap().keySet()) {
+            context.getExternalContext().getSessionMap().remove(bean);
+        }
 
-       // destroy session:
-       HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
-       session.invalidate();
+        // destroy session:
+        HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
+        session.invalidate();
 
        // using faces-redirect to initiate a new request:
-       //return "/index.xhtml?faces-redirect=true"; //Usar esta linha se a página inicial for a página index
-       return "faces/index_login.xhtml?faces-redirect=true"; //Usar esta linha se a página inicial for a página index_login
-   }
+        //return "/index.xhtml?faces-redirect=true"; //Usar esta linha se a página inicial for a página index
+        return "faces/index_login.xhtml?faces-redirect=true"; //Usar esta linha se a página inicial for a página index_login
+    }
 
     public String getUsername() {
         return username;
@@ -218,9 +221,8 @@ public class UserManager {
     public void setLoginFlag(boolean loginFlag) {
         this.loginFlag = loginFlag;
     }
-    
-    //////////////////////////////////////////////////////
 
+    //////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////// ADMINISTRATORS ////////////
     /*public String createAdministrator() {
@@ -264,22 +266,23 @@ public class UserManager {
 
     //updateUser -> qualquer user pode ser atualizado para Manager. Um admin tb pode ser manager e fica com 2 tipos?
     //não é possível fazer o update para Admin e para attendant(pôr esta hipótese ao grupo)
-    public String updateUser() throws EntityDoesNotExistsException, MyConstraintViolationException {
+    public String updateUser() throws PasswordValidationException {
         System.out.println("Current User ID" + currentUser.getId());
         try {
-            //if (currentUser.getPassword().equals(passwordVerify)) {
-            administratorBean.updateUser(
-                    currentUser.getId(),
-                    currentUser.getName(),
-                    currentUser.getEmail(),
-                    currentUser.getPassword()
-            );
-            return "/faces/administrator/administrator_lists?faces-redirect=true";
-//            } else {
-//                //TODO - NOT WORKING
-//                throw new PasswordValidationException("Password not equal to password confirmation.");
-//            }
-        } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
+            if (currentUser.getPassword().equals(passwordVerify)) {
+                administratorBean.updateUser(
+                        currentUser.getId(),
+                        currentUser.getUsername(),
+                        currentUser.getPassword(),
+                        currentUser.getName(),
+                        currentUser.getEmail()
+                );
+                return "/faces/administrator/administrator_lists?faces-redirect=true";
+            } else {
+                //TODO - NOT WORKING
+                throw new PasswordValidationException("Password not equal to password confirmation.");
+            }
+        } catch (EntityDoesNotExistsException | MyConstraintViolationException | EntityAlreadyExistsException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
@@ -333,7 +336,6 @@ public class UserManager {
 //        }
 //        return null;
 //    }
-
     public List<ManagerDTO> getAllManagers() {
         try {
             return managerBean.getAllManagers();
@@ -358,7 +360,7 @@ public class UserManager {
                 //TODO - NOT WORKING
                 throw new PasswordValidationException("Password not equal to password confirmation.");
             }
-        } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
+        } catch (EntityDoesNotExistsException | MyConstraintViolationException | EntityAlreadyExistsException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
@@ -373,7 +375,7 @@ public class UserManager {
             throw new EJBException(ex.getMessage());
         }
     }
-    
+
     public List<EventDTO> getAllEventsOfCurrentManagerManager() {
         try {
             return managerBean.getAllEventsOfManager(currentManager.getId());
@@ -453,7 +455,7 @@ public class UserManager {
         return null;
     }
 
-        public List<AttendantDTO> getEnrolledAttendantsInEvents(Long eventId) {
+    public List<AttendantDTO> getEnrolledAttendantsInEvents(Long eventId) {
 //        System.out.println("event.id capturado: " + eventId);
         try {
             return attendantBean.getEnrolledAttendantsInEvents(eventId);
@@ -514,7 +516,6 @@ public class UserManager {
 //        }
 //        return null;
 //    }
-
     public List<AttendantDTO> getAllAttendants() {
         try {
             return attendantBean.getAllAttendants();
@@ -523,19 +524,20 @@ public class UserManager {
             return null;
         }
     }
-/*
-    public int getAllAttendantsOfCategory(long id) {
-        try {
+    /*
+     public int getAllAttendantsOfCategory(long id) {
+     try {
 
-            return categoryBean.getNumberofAttendants(id);
-            // return attendantBean.getAllAttendants();
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-            return 0;
-        }
-    }
-*/
-    public String updateAttendant() {
+     return categoryBean.getNumberofAttendants(id);
+     // return attendantBean.getAllAttendants();
+     } catch (Exception e) {
+     FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+     return 0;
+     }
+     }
+     */
+
+    public String updateAttendant() throws PasswordValidationException {
         try {
             //verificar password
             if (currentAttendant.getPassword().equals(passwordVerify)) {
@@ -544,32 +546,34 @@ public class UserManager {
                         currentAttendant.getUsername(),
                         currentAttendant.getPassword(),
                         currentAttendant.getName(),
-                        currentAttendant.getEmail());
+                        currentAttendant.getEmail()
+                );
                 return "/faces/administrator/attendant_lists?faces-redirect=true";
             } else {
                 //TODO - NOT WORKING
                 throw new PasswordValidationException("Password not equal to password confirmation.");
             }
-        } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
+        } catch (EntityDoesNotExistsException | MyConstraintViolationException | EntityAlreadyExistsException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
         return "/faces/administrator/attendant_update?faces-redirect=true";
     }
-/*
-    public void removeAttendant(ActionEvent event) {
-        try {
-            UIParameter param = (UIParameter) event.getComponent().findComponent("attendantId");
-            Long id = Long.parseLong(param.getValue().toString());
-            attendantBean.removeAttendant(id);
-        } catch (EntityDoesNotExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
-    }
-*/
+    /*
+     public void removeAttendant(ActionEvent event) {
+     try {
+     UIParameter param = (UIParameter) event.getComponent().findComponent("attendantId");
+     Long id = Long.parseLong(param.getValue().toString());
+     attendantBean.removeAttendant(id);
+     } catch (EntityDoesNotExistsException e) {
+     FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+     } catch (Exception e) {
+     FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+     }
+     }
+     */
+
     public List<EventDTO> getAllEventsOfCurrentAttendant() {
         try {
             return attendantBean.getAllEventsOfAttendant(currentUser.getId());
@@ -577,7 +581,7 @@ public class UserManager {
             throw new EJBException(ex.getMessage());
         }
     }
-    
+
     public List<EventDTO> getAllEventsOfCurrentAttendantAttendant() {
         try {
             return attendantBean.getAllEventsOfAttendant(currentAttendant.getId());
@@ -632,31 +636,32 @@ public class UserManager {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }
     }
-/*
-    public void enrollAttendantInCategory(ActionEvent event) {
-        try {
-            UIParameter param = (UIParameter) event.getComponent().findComponent("attendantId");
-            Long id = Long.parseLong(param.getValue().toString());
-            attendantBean.enrollAttendantInCategory(id, currentCategory.getId());
-        } catch (EntityDoesNotExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
-    }
+    /*
+     public void enrollAttendantInCategory(ActionEvent event) {
+     try {
+     UIParameter param = (UIParameter) event.getComponent().findComponent("attendantId");
+     Long id = Long.parseLong(param.getValue().toString());
+     attendantBean.enrollAttendantInCategory(id, currentCategory.getId());
+     } catch (EntityDoesNotExistsException e) {
+     FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+     } catch (Exception e) {
+     FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+     }
+     }
 
-    public void unrollAttendantInCategory(ActionEvent event) {
-        try {
-            UIParameter param = (UIParameter) event.getComponent().findComponent("attendantId");
-            Long id = Long.parseLong(param.getValue().toString());
-            attendantBean.unrollAttendantInCategory(id, currentCategory.getId());
-        } catch (EntityDoesNotExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
-    }
-*/
+     public void unrollAttendantInCategory(ActionEvent event) {
+     try {
+     UIParameter param = (UIParameter) event.getComponent().findComponent("attendantId");
+     Long id = Long.parseLong(param.getValue().toString());
+     attendantBean.unrollAttendantInCategory(id, currentCategory.getId());
+     } catch (EntityDoesNotExistsException e) {
+     FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+     } catch (Exception e) {
+     FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+     }
+     }
+     */
+
     public String addCategoriesList() throws EntityDoesNotExistsException, EventEnrolledException {
 
         for (String str : categoriesSelected) {
@@ -734,7 +739,6 @@ public class UserManager {
 //
 //        }
 //    }
-
 //    public void addManagersList() throws EntityDoesNotExistsException, AttendantNotEnrolledException, AttendantEnrolledException, ManagerNotEnrolledException, ManagerEnrolledException {
 //        for (ManagerDTO att1 : eventBean.getEventManagers(currentEvent.getName())) {
 //            managerBean.unrollManagerInEvent(att1.getId(), currentEvent.getId());
@@ -748,17 +752,17 @@ public class UserManager {
 //        actualizarManagersSelected();
 //    }
 /*
-    public List<AttendantDTO> getEnrolledAttendantsInCategories() {
-        try {
-            return attendantBean.getEnrolledAttendantsInCategories(currentCategory.getId());
-        } catch (EntityDoesNotExistsException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
-        } catch (Exception e) {
-            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-        }
-        return null;
-    }
-    */
+     public List<AttendantDTO> getEnrolledAttendantsInCategories() {
+     try {
+     return attendantBean.getEnrolledAttendantsInCategories(currentCategory.getId());
+     } catch (EntityDoesNotExistsException e) {
+     FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+     } catch (Exception e) {
+     FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+     }
+     return null;
+     }
+     */
     /*
      public String updateEventCategories() throws EntityDoesNotExistsException, EventNotEnrolledException, EventEnrolledException {
      for (CategoryDTO cat : eventBean.getAllCategoriesOfEvent(currentEvent.getId())) {
@@ -963,6 +967,7 @@ public class UserManager {
     public void setPasswordVerify(String passwordVerify) {
         this.passwordVerify = passwordVerify;
     }
+<<<<<<< HEAD
 
     public List<String> getAttendantsPresentSelected() {
         return attendantsPresentSelected;
@@ -975,4 +980,7 @@ public class UserManager {
     
   
 }
+=======
+>>>>>>> de123c39587257c1bfc2955b9e27b8f1dc6e5dc7
 
+}
