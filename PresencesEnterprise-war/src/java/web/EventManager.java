@@ -76,7 +76,7 @@ public class EventManager {
                         newEvent.getName(),
                         newEvent.getDescription(),
                         newEvent.getStartDate(),
-                        newEvent.getStartDate());
+                        newEvent.getFinishDate());
 
                 //addCategoriesList();
                 newEvent.reset();

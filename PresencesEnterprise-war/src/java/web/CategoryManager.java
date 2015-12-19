@@ -30,7 +30,7 @@ public class CategoryManager {
 
     private CategoryDTO currentCategory;
     private CategoryDTO newCategory;
-
+    
     public CategoryManager() {
         currentCategory = new CategoryDTO();
         newCategory = new CategoryDTO();

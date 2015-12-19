@@ -16,7 +16,7 @@ public class UsernameValidator implements Validator {
     private static final Logger logger = Logger.getLogger("web.UserNameValidator");
 
     @Override
-    public void validate(FacesContext context, UIComponent toValidate, Object value) throws ValidatorException {
+    public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         try {
             //Your validation code goes here
             String username = (String) value;
@@ -24,8 +24,8 @@ public class UsernameValidator implements Validator {
             if (username.startsWith("xpto")) {
                 FacesMessage message = new FacesMessage("Error: invalid username.");
                 message.setSeverity(FacesMessage.SEVERITY_ERROR);
-                context.addMessage(toValidate.getClientId(context), message);
-                ((UIInput) toValidate).setValid(false);
+                context.addMessage(component.getClientId(context), message);
+                ((UIInput) component).setValid(false);
             }
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unkown error.", logger);
