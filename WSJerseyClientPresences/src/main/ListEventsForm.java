@@ -219,7 +219,7 @@ public class ListEventsForm extends javax.swing.JFrame {
         Date date = new Date();
 
         int i = 0;
-<<<<<<< HEAD
+
        // System.out.println("tamanho lista eventos:" + returnedEvents.size());
         //System.out.println("»»»»»KEY PRIMEIRO ELEMENTO =" + jTable2.getModel().getValueAt(0, 4).toString());
         //System.out.println("»»»»»KEY SEGUNDO ELEMENTO =" + jTable2.getModel().getValueAt(1, 4).toString());
@@ -231,49 +231,27 @@ public class ListEventsForm extends javax.swing.JFrame {
               //  System.out.println("»»»»»ESTA EM PROGRESSO ->" + isInProgress(dateFormat.format(date), returnedEvents.get(i).getStartDate(), returnedEvents.get(i).getFinishDate()));
                // System.out.println("»»»»»TEM KEY =" + jTable2.getModel().getValueAt(i, 4).toString());
                 if (isInProgress(dateFormat.format(date), returnedEvents.get(i).getStartDate(), returnedEvents.get(i).getFinishDate())
-                        && !jTable2.getModel().getValueAt(i, 4).toString().equals("")) {
+                        && !jTable2.getModel().getValueAt(i, 5).toString().equals("")) {
                     System.out.println("»»»»»ENTROU");
                     //its an event in progress that have the key with some input text by the user
                   //  System.out.println("Evento Preenchido com key : " + jTable2.getModel().getValueAt(i, 4));
-                    changeKeyOnEvent(returnedEvents.get(i).getId(), jTable2.getModel().getValueAt(i, 4).toString());
+                    changeKeyOnEvent(returnedEvents.get(i).getId(), jTable2.getModel().getValueAt(i, 5).toString());
                     //TODO - it will commit the key for the rest service
                     //TODO - how he confirm that the key is stored by the rest service?
                     oneToSubmmit = true;
                     break;
                 }
 
-=======
-        System.out.println("tamanho lista eventos:" + returnedEvents.size());
-        boolean oneToSubmmit=false;
-        for (i = 0; i < returnedEvents.size(); i++) {
-           
-            try {
-                if (isInProgress(dateFormat.format(date), returnedEvents.get(i).getStartDate(), returnedEvents.get(i).getFinishDate()) 
-                        && jTable2.getModel().getValueAt(i, 5).toString() != "" && returnedEvents.get(i).isOpenForPresence()) {
 
-                    //its an event in progress that have the key with some input text by the user
-                    System.out.println("Evento Preenchido com key : " + jTable2.getModel().getValueAt(i, 5));
-                    changeKeyOnEvent(returnedEvents.get(i).getId(), jTable2.getModel().getValueAt(i, 5).toString());
-                    //TODO - it will commit the key for the rest service
-                    //TODO - how he confirm that the key is stored by the rest service?
-                    oneToSubmmit=true;
-                }
-               
-                
->>>>>>> 810acc2af5d9bbb05a45f4c1af2b2b6815aa335f
             } catch (ParseException ex) {
                 Logger.getLogger(ListEventsForm.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
-<<<<<<< HEAD
-        if (!oneToSubmmit) {
-            JOptionPane.showMessageDialog(null, "No key on Event InProgress to submmit!");
-        }
-=======
+
          if(!oneToSubmmit)
                  JOptionPane.showMessageDialog(null, "ERROR !!! \n Verify if you have a KEY on event that is OPEN and IN PROGRESS for submmit presence !");
->>>>>>> 810acc2af5d9bbb05a45f4c1af2b2b6815aa335f
+
 
 
     }//GEN-LAST:event_jButton3ActionPerformed
@@ -359,11 +337,9 @@ public class ListEventsForm extends javax.swing.JFrame {
 
             final DefaultTableModel model2 = new DefaultTableModel(dataRow, dataTitle) {
                 Class[] types = new Class[]{
-<<<<<<< HEAD
-                    java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,java.lang.String.class, java.lang.String.class
-=======
+
                     java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
->>>>>>> 810acc2af5d9bbb05a45f4c1af2b2b6815aa335f
+
                 };
                 boolean[] canEdit = new boolean[]{
                     false, false, false, false,false, true
@@ -416,10 +392,9 @@ public class ListEventsForm extends javax.swing.JFrame {
         Client client = ClientBuilder.newClient();
 
         HttpAuthenticationFeature feature = null;
-<<<<<<< HEAD
-=======
+
         System.out.println("HTTP REQUEST :  user + pass"+username+" -> "+ password);
->>>>>>> 810acc2af5d9bbb05a45f4c1af2b2b6815aa335f
+
         feature = HttpAuthenticationFeature.basic(username, password);
         client.register(feature);
 

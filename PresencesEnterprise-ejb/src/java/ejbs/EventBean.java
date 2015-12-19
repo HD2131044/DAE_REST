@@ -455,9 +455,8 @@ public class EventBean {
         }
     }
 
-<<<<<<< HEAD
-    public EventDTO eventToDTO(Event event
-=======
+
+
     public void novaListaPresentes(Long eventId, LinkedList<String> presentes) throws EntityDoesNotExistsException {
         Event event = em.find(Event.class, eventId);
         if (event == null) {
@@ -473,9 +472,7 @@ public class EventBean {
 
     }
 
-    EventDTO eventToDTO(Event event
->>>>>>> 810acc2af5d9bbb05a45f4c1af2b2b6815aa335f
-    ) {
+    EventDTO eventToDTO(Event event) {
         EventDTO eventDTO = new EventDTO(
                 event.getId(),
                 event.getName(),
@@ -550,9 +547,6 @@ public class EventBean {
         return dtos;
     }
 
-<<<<<<< HEAD
-    //rest - attendant  update key on event confirm presence
-=======
     public void clearPresencesList(Long id) throws EntityDoesNotExistsException {
         Event event = em.find(Event.class, id);
         if (event == null) {
@@ -561,7 +555,6 @@ public class EventBean {
         event.getPresentes().clear();
     }
      //rest - attendant  update key on event confirm presence
->>>>>>> 810acc2af5d9bbb05a45f4c1af2b2b6815aa335f
     
        @RolesAllowed({"Attendant"})
      public String setPasswordOnEventOfAttendant(Long attendantId,Long eventId,String key) throws EntityDoesNotExistsException {
@@ -574,7 +567,20 @@ public class EventBean {
                 if(eventId == event.getId()){
                     //set password
                     System.out.println("Aqui é onde vai dispultar o set da Password : "+key);
-                    return "Efectuado com Sucesso";
+                    System.out.println("key : " +  key +" EVENT PASS : "+event.getPassword() );
+                    if(key.equals(event.getPassword())){
+                         System.out.println("TESTE :"+ event.getPresentes().contains(attendant));
+                        if(event.getPresentes().contains(attendant)){
+                           
+                            return "Ja se encontra marcado como Presente no Evento !";
+                        }
+                       event.addPresenca(attendant);
+                     return "Chave validada . Efectuada a sua confirmacao com Sucesso";
+                   }else{
+                   return "Chave invalida . Volte a tentar com uma chave valida";
+                   
+                   }
+                    
                 }
             }
         } catch (EntityDoesNotExistsException e) {
@@ -584,9 +590,5 @@ public class EventBean {
         }
         return "";
     }
-    
-<<<<<<< HEAD
-    
-=======
->>>>>>> 810acc2af5d9bbb05a45f4c1af2b2b6815aa335f
+
 }

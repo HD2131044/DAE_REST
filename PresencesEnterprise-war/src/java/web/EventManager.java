@@ -287,6 +287,7 @@ public class EventManager {
     }
 
     public void updatePassword() throws EntityDoesNotExistsException {
+        System.out.println("PPP :"+currentEvent.getPassword());
         eventBean.updatePassword(currentEvent.getId(), currentEvent.getPassword());
     }
 
