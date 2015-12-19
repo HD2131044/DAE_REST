@@ -5,7 +5,7 @@ import javax.annotation.Generated;
 import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2015-12-19T16:11:28")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2015-12-19T18:07:10")
 @StaticMetamodel(AttendantCategory.class)
 public class AttendantCategory_ extends Category_ {
 

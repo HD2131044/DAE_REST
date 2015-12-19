@@ -51,7 +51,7 @@
                     <h:outputText value="Details" />
                 </f:facet>
                 <h:form>
-                    <h:commandLink id="details" action="/faces/administrator/category_details?faces-redirect=true">
+                    <h:commandLink id="details" action="/faces/administrator/categoryEvent_details?faces-redirect=true">
                         <h:outputText value="details" />
                         <f:setPropertyActionListener target="#{categoryManager.currentCategory}" value="#{category}" />
                     </h:commandLink>  
@@ -63,7 +63,7 @@
                     <h:outputText value="Update" />
                 </f:facet>
                 <h:form>
-                    <h:commandLink id="category_update_link" action="/faces/administrator/category_update?faces-redirect=true">
+                    <h:commandLink id="category_update_link" action="/faces/administrator/categoryEvent_update?faces-redirect=true">
                         <h:outputText value="Update" />
                         <f:setPropertyActionListener target="#{categoryManager.currentCategory}" value="#{category}" />
                     </h:commandLink>

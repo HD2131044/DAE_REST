@@ -22,9 +22,9 @@
                 <h:inputText 
                     id="usernameInputText" 
                     required="true" 
-                    value="#{userManager.currentManager.username}" />
+                    value="#{userManager.currentManager.username}" /> 
                 <h:message for="usernameInputText" />
-               
+
                 <h:outputLabel for="emailInputText" rendered="true" value="Email: " />
                 <h:inputText 
                     id="emailInputText" 
@@ -43,12 +43,17 @@
                     required="true" 
                     value="#{userManager.passwordVerify}" />
                 <h:message for="confirmpasswordInputText" />
-               
+
             </h:panelGrid>
-            <hr></hr>
-            <h:commandButton value="Update" action="#{userManager.updateManager}"/>
+            <br></br>
+            <h:commandButton 
+                value="Update" 
+                binding="#{userManager.component}"
+                action="#{userManager.updateManager}"/>
+            <h:messages style="color: red" />
 
         </h:form>
+        <hr></hr>
         <h:form>
             <h:commandButton value="Back" action="/faces/administrator/admin_manager_lists.xhtml?faces-redirect=true" />	
         </h:form>
