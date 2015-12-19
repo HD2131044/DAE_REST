@@ -12,7 +12,6 @@ import ejbs.AttendantBean;
 import ejbs.CategoryBean;
 import ejbs.EventBean;
 import ejbs.ManagerBean;
-import entities.Attendant;
 import entities.User;
 import entities.UserGroup;
 import exceptions.AttendantEnrolledException;
@@ -594,25 +593,6 @@ public class UserManager {
         return attendantBean.getAllEventsOfAttendant(attendantId).size();
     }
 
-    /*
-     public List<AttendantDTO> getCurrentAttendantsInEvent() {
-     try {
-     return eventBean.getAttendant(currentAttendant.getUsername());
-     } catch (Exception e) {
-     FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-     return null;
-     }
-     }
-    
-     public List<AttendantDTO> getCurrentAttendantsInCategory() {
-     try {
-     return categoryBean.getAttendant(currentAttendant.getUsername());
-     } catch (Exception e) {
-     FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
-     return null;
-     }
-     }
-     */
     public void enrollAttendantInEvent(ActionEvent event) {
         try {
             UIParameter param = (UIParameter) event.getComponent().findComponent("attendantId");
@@ -661,6 +641,10 @@ public class UserManager {
      }
      }
      */
+    
+    public List<AttendantDTO> allCategoryAttendants(Long id) throws EntityDoesNotExistsException {
+        return attendantBean.getEnrolledAttendantsInCategories(id);
+    }
 
     public String addCategoriesList() throws EntityDoesNotExistsException, EventEnrolledException {
 

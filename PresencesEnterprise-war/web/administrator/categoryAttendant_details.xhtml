@@ -24,12 +24,11 @@ and open the template in the editor.
 
             </h:panelGrid>
             <hr></hr>
-            <h3 style="color: green">Category Events </h3>
-            <hr></hr>
+            
             <h:dataTable
-                var="event" 
-                summary="Table of events"
-                value="#{categoryManager.allCategoryEvents}"
+                var="user" 
+                summary="Table of Attendants"
+                value="#{userManager.allCategoryAttendants(categoryManager.currentCategory.id)}"
                 rules="all"
                 cellpadding="10">
                 <h:column>
@@ -37,38 +36,28 @@ and open the template in the editor.
                         <h:outputText value="Name" />
                     </f:facet>
                     <h:form>
-                        <h:outputText value="#{event.name}" />
+                        <h:outputText value="#{user.name}" />
+                    </h:form>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Username" />
+                    </f:facet>
+                    <h:form>
+                        <h:outputText value="#{user.username}" />
+                    </h:form>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Email" />
+                    </f:facet>
+                    <h:form>
+                        <h:outputText value="#{user.email}" />
                     </h:form>
                 </h:column>
 
-                <h:column>
-                    <f:facet name="header">
-                        <h:outputText value="Description" />
-                    </f:facet>
-                    <h:form>
-                        <h:outputText value="#{event.description}" />
-                    </h:form>
-                </h:column>
-
-                <h:column>
-                    <f:facet name="header">
-                        <h:outputText value="Start Date" />
-                    </f:facet>
-                    <h:form>
-                        <h:outputText value="#{event.startDate}" />
-                    </h:form>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">
-                        <h:outputText value="Finish Date" />
-                    </f:facet>
-                    <h:form>
-                        <h:outputText value="#{event.finishDate}" />
-                    </h:form>
-                </h:column>
+                
             </h:dataTable>
-
-            <hr></hr>
 
             <h:commandButton value="Back" action="/faces/administrator/category_lists?faces-redirect=true"/>
 

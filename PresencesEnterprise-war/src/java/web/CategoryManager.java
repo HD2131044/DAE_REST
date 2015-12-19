@@ -7,6 +7,7 @@ package web;
 
 import static com.sun.xml.ws.security.addressing.impl.policy.Constants.logger;
 import dtos.AttendantCategoryDTO;
+import dtos.AttendantDTO;
 import dtos.CategoryDTO;
 import dtos.EventCategoryDTO;
 import dtos.EventDTO;
@@ -86,6 +87,15 @@ public class CategoryManager {
     public List<EventDTO> getAllCategoryEvents() {
         try {
             return categoryBean.getAllCategoryEvents(currentCategory.getId());
+        } catch (Exception e) {
+            FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
+            return null;
+        }
+    }
+    
+    public List<AttendantDTO> getAllCategoryAttendants() {
+        try {
+            return categoryBean.getAllCategoryAttendants(currentCategory.getId());
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
             return null;

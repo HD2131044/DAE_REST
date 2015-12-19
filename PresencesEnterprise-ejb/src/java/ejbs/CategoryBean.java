@@ -1,6 +1,7 @@
 package ejbs;
 
 import dtos.AttendantCategoryDTO;
+import dtos.AttendantDTO;
 import dtos.CategoryDTO;
 import dtos.EventCategoryDTO;
 import dtos.EventDTO;
@@ -83,6 +84,14 @@ public class CategoryBean {
         }
     }
 
+    public List<AttendantDTO> getAllCategoryAttendants(Long id) throws EntityDoesNotExistsException {
+        AttendantCategory category = em.find(AttendantCategory.class, id);
+        if (category == null) {
+            throw new EntityDoesNotExistsException("There is no category with that id.");
+        }
+        return attendantsToDTOs(category.getAttendants());
+    }
+
     public List<EventCategoryDTO> getAllCategoriesOfCurrentEvent(Long id) throws EntityDoesNotExistsException {
 
         Event event = em.find(Event.class, id);
@@ -144,23 +153,12 @@ public class CategoryBean {
 //    public void updateCategory(Long id, String name) throws EntityDoesNotExistsException, MyConstraintViolationException, EntityAlreadyExistsException {
     public void updateCategory(Long id, String name) throws EntityDoesNotExistsException, MyConstraintViolationException {
         try {
-
-            EventCategory category = em.find(EventCategory.class, id);
+            
+            Category category = em.find(Category.class, id);
             if (category == null) {
                 throw new EntityDoesNotExistsException("There is no category with that id.");
             }
-            System.out.println("ID: " + id);
-            System.out.println("NAME: " + name);
 
-            System.out.println("CategoryID: " + category.getId());
-            
-//             List<Category> categories = (List<Category>) em.createNamedQuery("getAllCategories").getResultList();
-//             for (Category c : categories) {
-//                if (name.equals(c.getName())) {
-//                throw new EntityAlreadyExistsException("A category with that name already exists.");
-//                 }
-//             }
-             
             category.setName(name);
             em.merge(category);
 //        } catch (EntityDoesNotExistsException | EntityAlreadyExistsException e) {
@@ -175,7 +173,7 @@ public class CategoryBean {
 
     public void removeCategory(Long id) throws EntityDoesNotExistsException {
         try {
-            Category category = em.find(EventCategory.class, id);
+            Category category = em.find(Category.class, id);
             if (category == null) {
                 throw new EntityDoesNotExistsException("There is no category with that id.");
             }
@@ -197,34 +195,6 @@ public class CategoryBean {
         }
     }
 
-    /* Caso o manager tenha categories
-     public List<CategoryDTO> getManagerCategories(Long managerId) throws EntityDoesNotExistsException {
-     try {
-     Manager manager = em.find(Manager.class, managerId);
-     if (manager == null) {
-     throw new EntityDoesNotExistsException("Manager does not exists.");
-     }
-     return eventCategoriesToDTOs(manager.getCategories()); 
-     } catch (EntityDoesNotExistsException e) {
-     throw e;
-     } catch (Exception e) {
-     throw new EJBException(e.getMessage());
-     }
-     }
-     */
-//    public List<AttendantCategoryDTO> getAttendantCategories(Long attendantId) throws EntityDoesNotExistsException {
-//        try {
-//            Attendant attendant = em.find(Attendant.class, attendantId);
-//            if (attendant == null) {
-//                throw new EntityDoesNotExistsException("Attendant does not exists.");
-//            }
-//            return attendantCategoriesToDTOs(attendant.getCategories());
-//        } catch (EntityDoesNotExistsException e) {
-//            throw e;
-//        } catch (Exception e) {
-//            throw new EJBException(e.getMessage());
-//        }
-//    }
     public List<EventCategoryDTO> getEventCategories(Long eventId) throws EntityDoesNotExistsException {
         try {
             Event event = em.find(Event.class, eventId);
@@ -286,6 +256,23 @@ public class CategoryBean {
         List<EventDTO> dtos = new ArrayList<>();
         for (Event e : events) {
             dtos.add(eventToDTO(e));
+        }
+        return dtos;
+    }
+
+    public AttendantDTO attendantToDTO(Attendant attendant) {
+        return new AttendantDTO(
+                attendant.getId(),
+                attendant.getUserName(),
+                null,
+                attendant.getName(),
+                attendant.getEmail());
+    }
+
+    public List<AttendantDTO> attendantsToDTOs(List<Attendant> attendants) {
+        List<AttendantDTO> dtos = new ArrayList<>();
+        for (Attendant a : attendants) {
+            dtos.add(attendantToDTO(a));
         }
         return dtos;
     }
