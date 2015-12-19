@@ -1,7 +1,5 @@
-
 package entities;
 
-import static auxCategories.UserType.ADMINISTRATOR;
 import entities.UserGroup.GROUP;
 import java.io.Serializable;
 import javax.persistence.Entity;
@@ -20,7 +18,6 @@ public class Administrator extends User implements Serializable {
 
     //private List<User> users;
     //private List<Event> events;
-
     public Administrator() {
         //this.users = new LinkedList<>();
         //this.events = new LinkedList<>();
@@ -95,7 +92,6 @@ public class Administrator extends User implements Serializable {
 //    public int getNumberOfEvents() {
 //        return this.events.size();
 //    }
-
     @Override
     public String toString() {
         return "entities.Administrator[id=" + id + "]: " + name;

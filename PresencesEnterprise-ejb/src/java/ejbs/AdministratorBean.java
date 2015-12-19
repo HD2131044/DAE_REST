@@ -1,6 +1,5 @@
 package ejbs;
 
-import auxCategories.UserType;
 import dtos.AdministratorDTO;
 import entities.Administrator;
 import entities.Attendant;

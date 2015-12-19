@@ -1,6 +1,5 @@
 package entities;
 
-import static auxCategories.UserType.ATTENDANT;
 import entities.UserGroup.GROUP;
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -8,10 +7,8 @@ import java.util.List;
 import javax.ejb.EJBException;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 
 @Entity
 //@Table(name = "ATTENDANTS")
@@ -122,7 +119,7 @@ public class Attendant extends User implements Serializable {
     public void setEventParticipant(List<Event> eventParticipant) {
         this.eventParticipant = eventParticipant;
     }
-    
+
     @Override
     public String toString() {
         return "entities.Attendant[id=" + id + "]: " + name;

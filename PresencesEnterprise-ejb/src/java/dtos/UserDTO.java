@@ -1,7 +1,6 @@
 
 package dtos;
 
-import auxCategories.UserType;
 import entities.UserGroup.GROUP;
 import java.io.Serializable;
 

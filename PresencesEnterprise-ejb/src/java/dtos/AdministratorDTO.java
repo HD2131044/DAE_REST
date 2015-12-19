@@ -1,10 +1,8 @@
 
 package dtos;
 
-import static auxCategories.UserType.ADMINISTRATOR;
 import entities.UserGroup.GROUP;
 import java.io.Serializable;
-import java.util.List;
 
 public class AdministratorDTO extends UserDTO implements Serializable {
     

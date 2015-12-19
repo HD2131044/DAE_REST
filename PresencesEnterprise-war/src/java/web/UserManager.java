@@ -967,10 +967,7 @@ public class UserManager {
     public void setPasswordVerify(String passwordVerify) {
         this.passwordVerify = passwordVerify;
     }
-<<<<<<< HEAD
-=======
 
->>>>>>> 615a08d31bf2bc9305a48bbeffaa17c91dca9378
 
     public List<String> getAttendantsPresentSelected() {
         return attendantsPresentSelected;
@@ -979,14 +976,5 @@ public class UserManager {
     public void setAttendantsPresentSelected(List<String> attendantsPresentSelected) {
         this.attendantsPresentSelected = attendantsPresentSelected;
     }
-<<<<<<< HEAD
- 
-=======
-    
-    
-  
 
-
-
->>>>>>> 615a08d31bf2bc9305a48bbeffaa17c91dca9378
 }

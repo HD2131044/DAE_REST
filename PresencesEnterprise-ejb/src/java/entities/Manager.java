@@ -5,7 +5,6 @@
  */
 package entities;
 
-import static auxCategories.UserType.MANAGER;
 import entities.UserGroup.GROUP;
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -16,17 +15,16 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
-
 @Entity
 //@Table(name = "MANAGERS")
 @NamedQueries({
     @NamedQuery(
-        name="getAllManagers",
-        query="SELECT ma FROM Manager ma ORDER BY ma.id"
+            name = "getAllManagers",
+            query = "SELECT ma FROM Manager ma ORDER BY ma.id"
     )
 })
 public class Manager extends User implements Serializable {
-    
+
     @ManyToMany(mappedBy = "managers")
     private List<Event> events;
 
@@ -46,34 +44,34 @@ public class Manager extends User implements Serializable {
     public void setEvents(List<Event> events) {
         this.events = events;
     }
-    
-    public void addEvent(Event event){
+
+    public void addEvent(Event event) {
         try {
-            if (!events.contains(event)){
+            if (!events.contains(event)) {
                 events.add(event);
             }
         } catch (Exception ex) {
             throw new EJBException(ex.getMessage());
         }
     }
-    
-    public void removeEvent(Event event){
+
+    public void removeEvent(Event event) {
         try {
-            if (events.contains(event)){
+            if (events.contains(event)) {
                 events.remove(event);
             }
         } catch (Exception ex) {
             throw new EJBException(ex.getMessage());
         }
     }
-    
-    public int getNumberOfEvents(){
+
+    public int getNumberOfEvents() {
         return this.events.size();
     }
 
     @Override
     public String toString() {
-        return "entities.Manager[id=" + id + "]: "+ name;
+        return "entities.Manager[id=" + id + "]: " + name;
     }
-    
+
 }
