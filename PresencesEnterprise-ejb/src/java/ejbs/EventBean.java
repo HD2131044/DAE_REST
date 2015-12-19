@@ -82,23 +82,23 @@ public class EventBean {
         return null;
     }
 
-    public void updateEvent(Long id, String name, String description, String startDate, String finishDate) throws EntityDoesNotExistsException, MyConstraintViolationException {
+    public void updateEvent(Long id, String name, String description, String startDate, String finishDate) throws EntityDoesNotExistsException, EntityAlreadyExistsException, MyConstraintViolationException {
         try {
             Event event = em.find(Event.class, id);
             if (event == null) {
                 throw new EntityDoesNotExistsException("There is no event with that id.");
             }
-            /*List<Event> events = (List<Event>) em.createNamedQuery("getAllEvents").getResultList();
+            List<Event> events = (List<Event>) em.createNamedQuery("getAllEvents").getResultList();
             for (Event e : events){
-                if (name.equals(e.getName())){
-                    throw new EntityAlreadyExistsException("That event already exists.");
+                if (name.equals(e.getName()) && !e.getId().equals(event.getId())){
+                    throw new EntityAlreadyExistsException("A event with that name already exists.");
                 }
-            }*/
+            }
             event.setName(name);
             event.setDescription(description);
             event.setStartDate(startDate);
             event.setFinishDate(finishDate);
-        } catch (EntityDoesNotExistsException e) {
+        } catch (EntityDoesNotExistsException | EntityAlreadyExistsException e) {
             throw e;
         } catch (ConstraintViolationException e) {
             throw new MyConstraintViolationException(Utils.getConstraintViolationMessages(e));

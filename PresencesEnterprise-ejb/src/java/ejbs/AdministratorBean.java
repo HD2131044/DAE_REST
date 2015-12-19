@@ -44,7 +44,6 @@ public class AdministratorBean {
 //            throw new EJBException(e.getMessage());
 //        }
 //    }
-
     public void createUser(String username, String password, String name, String email, GROUP group) throws EntityAlreadyExistsException, MyConstraintViolationException {
         try {
             List<User> users = (List<User>) em.createNamedQuery("getAllUsers").getResultList();
@@ -128,23 +127,26 @@ public class AdministratorBean {
 //            throw new EJBException(e.getMessage());
 //        }
 //    }
-
     //updateUser -> qualquer user pode ser atualizado para Manager. Um admin tb pode ser manager e fica com 2 tipos?
     //não é possível fazer o update para Admin e para attendant(pôr esta hipótese ao grupo)
-    public void updateUser(Long id, String name, String email, String password) throws EntityDoesNotExistsException, MyConstraintViolationException {
+    public void updateUser(Long id, String name, String username, String email, String password) throws EntityDoesNotExistsException, MyConstraintViolationException, EntityAlreadyExistsException {
         try {
-        User user = em.find(User.class, id);
-        if (user == null) {
+            User user = em.find(User.class, id);
+            if (user == null) {
                 throw new EntityDoesNotExistsException("There is no user with that id.");
             }
-
-        user.setName(name);
-        user.setEmail(email);
-        user.setPassword(password);
-       
-        em.merge(user);
-
-        } catch (EntityDoesNotExistsException e) {
+            List<User> users = (List<User>) em.createNamedQuery("getAllUsers").getResultList();
+            for (User u : users) {
+                if (username.equals(u.getUserName()) && !u.getId().equals(user.getId())) {
+                    throw new EntityAlreadyExistsException("That username already exists.");
+                }
+            }
+            user.setUsername(username);
+            user.setPassword(password);
+            user.setName(name);
+            user.setEmail(email);
+            em.merge(user);
+        } catch (EntityDoesNotExistsException | EntityAlreadyExistsException e) {
             throw e;
         } catch (ConstraintViolationException e) {
             throw new MyConstraintViolationException(Utils.getConstraintViolationMessages(e));
@@ -167,7 +169,6 @@ public class AdministratorBean {
 //            throw new EJBException(e.getMessage());
 //        }
 //    }
-
     public void removeUser(Long id) throws EntityDoesNotExistsException {
         try {
             User user = em.find(User.class, id);
@@ -184,7 +185,7 @@ public class AdministratorBean {
     }
 
     public UserGroup.GROUP[] getUserGroup() {
-       return UserGroup.GROUP.values();
+        return UserGroup.GROUP.values();
     }
 
     AdministratorDTO administratorToDTO(Administrator administrator) {
@@ -205,21 +206,21 @@ public class AdministratorBean {
     }
 
     public long getUserIdByUserName(String userName) {
-      try {
-           
-           List<User> users = (List<User>) em.createNamedQuery("getAllUsers").getResultList();
-           for (User user : users){
-               
-               if (userName.equals(user.getUserName())){
-                   return user.getId();
-               }
-           }
-          
-       } catch (Exception e) {
-           throw new EJBException(e.getMessage());
-       }
-       return 0;
-   }
+        try {
+
+            List<User> users = (List<User>) em.createNamedQuery("getAllUsers").getResultList();
+            for (User user : users) {
+
+                if (userName.equals(user.getUserName())) {
+                    return user.getId();
+                }
+            }
+
+        } catch (Exception e) {
+            throw new EJBException(e.getMessage());
+        }
+        return 0;
+    }
 
     public User getUserByUserName(String username) {
         User user = em.find(User.class, getUserIdByUserName(username));

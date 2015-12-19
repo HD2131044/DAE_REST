@@ -97,11 +97,11 @@ public class EventManager {
                     currentEvent.getName(),
                     currentEvent.getDescription(),
                     currentEvent.getStartDate(),
-                    currentEvent.getStartDate());
+                    currentEvent.getFinishDate());
             return "/faces/administrator/event_lists?faces-redirect=true";
 
-        } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
-            FacesExceptionHandler.handleException(e, e.getMessage(), logger);
+        } catch (EntityDoesNotExistsException | MyConstraintViolationException | EntityAlreadyExistsException e) {
+            FacesExceptionHandler.handleException(e, e.getMessage(), logger);   
         } catch (Exception e) {
             FacesExceptionHandler.handleException(e, "Unexpected error! Try again latter!", logger);
         }

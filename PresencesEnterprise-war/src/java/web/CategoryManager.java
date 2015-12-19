@@ -118,6 +118,7 @@ public class CategoryManager {
                     currentCategory.getName());
             return "/faces/administrator/category_lists?faces-redirect=true";
 
+//        } catch (EntityDoesNotExistsException | MyConstraintViolationException | EntityAlreadyExistsException e) {
         } catch (EntityDoesNotExistsException | MyConstraintViolationException e) {
             FacesExceptionHandler.handleException(e, e.getMessage(), logger);
         } catch (Exception e) {
